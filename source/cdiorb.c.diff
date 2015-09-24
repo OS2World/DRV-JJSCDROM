@@ -1,0 +1,641 @@
+69a70,72
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+110a114,116
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+132a139,141
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+138a148,149
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+139a151
+> #endif                                                                                                                         // JJ20030312
+160a173,188
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>       for(;;)                                                                                                                  // JJ20030312
+>          if (CB_FreeList != 0)                                                                                                 // JJ20030312
+>          {                                                                                                                     // JJ20030312
+>             *pIORB = (NPIORBH) CB_FreeList;                                                                                    // JJ20030312
+>             CB_FreeList = (NPBYTE) (ULONG)(*pIORB)->pNxtIORB;                                                                  // JJ20030312
+>             break;                                                                                                             // JJ20030312
+>          }                                                                                                                     // JJ20030312
+>          else                                                                                                                  // JJ20030312
+>          {                                                                                                                     // JJ20030312
+>             PoolSem++;                                                                                                         // JJ20030312
+>             DevHelp_ProcBlock((ULONG) ppDataSeg, (ULONG)-1, WAIT_IS_INTERRUPTABLE);                                            // JJ20030312
+>             DISABLE;                                                                                                           // JJ20030312
+>             PoolSem--;                                                                                                         // JJ20030312
+>          }                                                                                                                     // JJ20030312
+> #else                                                                                                                          // JJ20030312
+177a206
+> #endif                                                                                                                         // JJ20030312
+187a217,219
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+207a240,242
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+241a277,279
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+397a436,447
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    {                                                                                                                           // JJ20030312
+>       NPIORBH piorbh = &pIORB->apt.iorbh;                                                                                      // JJ20030312
+>       piorbh->Length = sizeof(IORB_ADAPTER_PASSTHRU);                                                                          // JJ20030312
+>       piorbh->CommandCode = IOCC_ADAPTER_PASSTHRU;                                                                             // JJ20030312
+>       piorbh->CommandModifier = IOCM_EXECUTE_CDB;                                                                              // JJ20030312
+>       piorbh->RequestControl = IORB_ASYNC_POST + IORB_REQ_STATUSBLOCK;                                                         // JJ20030312
+>       piorbh->StatusBlockLen = sizeof(SCSI_STATUS_BLOCK);                                                                      // JJ20030312
+>       piorbh->NotifyAddress = &NotifyDoneIORB;                                                                                 // JJ20030312
+>       piorbh->UnitHandle = pUnitCB->UnitInfo.UnitHandle;                                                                       // JJ20030312
+>    }                                                                                                                           // JJ20030312
+> #else                                                                                                                          // JJ20030312
+401a452
+> #endif                                                                                                                         // JJ20030312
+629a681,682
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+630a684
+> #endif                                                                                                                         // JJ20030312
+632a687,688
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+633a690
+> #endif                                                                                                                         // JJ20030312
+653a711,715
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA_msb            = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.usbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.usbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+656a719
+> #endif                                                                                                                         // JJ20030312
+701a765,766
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+702a768
+> #endif                                                                                                                         // JJ20030312
+704a771,772
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+705a774
+> #endif                                                                                                                         // JJ20030312
+725a795,800
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA.ulbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_3;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_2 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_3 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+729a805
+> #endif                                                                                                                         // JJ20030312
+774a851,852
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+775a854
+> #endif                                                                                                                         // JJ20030312
+777a857,858
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+778a860
+> #endif                                                                                                                         // JJ20030312
+798a881,886
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA.ulbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_3;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_2 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_3 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+802a891
+> #endif                                                                                                                         // JJ20030312
+846a936,937
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+847a939
+> #endif                                                                                                                         // JJ20030312
+849a942,943
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+850a945
+> #endif                                                                                                                         // JJ20030312
+870a966,971
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA.ulbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_3;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_2 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_3 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+874a976
+> #endif                                                                                                                         // JJ20030312
+912a1015,1016
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+915a1020
+> #endif                                                                                                                         // JJ20030312
+930a1036,1040
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA_msb            = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.usbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.usbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+933a1044
+> #endif                                                                                                                         // JJ20030312
+969a1081,1082
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+972a1086
+> #endif                                                                                                                         // JJ20030312
+987a1102,1107
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA.ulbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_3;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_2 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_3 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+991a1112
+> #endif                                                                                                                         // JJ20030312
+1116a1238,1239
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1119a1243
+> #endif                                                                                                                         // JJ20030312
+1127a1252,1253
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1130a1257
+> #endif                                                                                                                         // JJ20030312
+1135a1263,1264
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1136a1266
+> #endif                                                                                                                         // JJ20030312
+1144a1275,1276
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1145a1278
+> #endif                                                                                                                         // JJ20030312
+1150a1284,1285
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1151a1287
+> #endif                                                                                                                         // JJ20030312
+1154a1291,1292
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1156a1295
+> #endif                                                                                                                         // JJ20030312
+1157a1297,1298
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1161a1303
+> #endif                                                                                                                         // JJ20030312
+1219a1362,1363
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1223a1368
+> #endif                                                                                                                         // JJ20030312
+1276a1422,1423
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1277a1425
+> #endif                                                                                                                         // JJ20030312
+1283a1432,1433
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1287a1438
+> #endif                                                                                                                         // JJ20030312
+1319a1471,1472
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1320a1474
+> #endif                                                                                                                         // JJ20030312
+1344a1499,1500
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1345a1502
+> #endif                                                                                                                         // JJ20030312
+1347a1505,1507
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    f_BlockCopy ((PBYTE)&pIORB->CDB_data[0], (PBYTE)&WP_data[0], parm_length);                                                  // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1349a1510
+> #endif                                                                                                                         // JJ20030312
+1393a1555,1557
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>       dataLength=sizeof(struct ModeSelectHdr_10)+sizeof(struct BlockDescriptor)+sizeof(struct Page_Write_Parameters);          // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1394a1559
+> #endif                                                                                                                         // JJ20030312
+1397a1563,1565
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>       dataLength=sizeof(struct ModeSelectHdr_10)+sizeof(struct BlockDescriptor)+sizeof(struct Page_Capabilities);              // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1398a1567
+> #endif                                                                                                                         // JJ20030312
+1419a1589,1590
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1421a1593
+> #endif                                                                                                                         // JJ20030312
+1476a1649,1650
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1480a1655
+> #endif                                                                                                                         // JJ20030312
+1485a1661,1662
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1486a1664
+> #endif                                                                                                                         // JJ20030312
+1492a1671,1676
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>       pParmList->Descriptor.CDRW_descriptor.format_size.ulbytes.byte_0 = ((union ULONGB FAR *)&blocks)->ulbytes.byte_3;        // JJ20030312
+>       pParmList->Descriptor.CDRW_descriptor.format_size.ulbytes.byte_1 = ((union ULONGB FAR *)&blocks)->ulbytes.byte_2;        // JJ20030312
+>       pParmList->Descriptor.CDRW_descriptor.format_size.ulbytes.byte_2 = ((union ULONGB FAR *)&blocks)->ulbytes.byte_1;        // JJ20030312
+>       pParmList->Descriptor.CDRW_descriptor.format_size.ulbytes.byte_3 = ((union ULONGB FAR *)&blocks)->ulbytes.byte_0;        // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1496a1681
+> #endif                                                                                                                         // JJ20030312
+1501a1687,1692
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>       pParmList->Descriptor.FMT1_descriptor.num_of_blocks.ulbytes.byte_0 = ((union ULONGB FAR *)&blocks)->ulbytes.byte_3;      // JJ20030312
+>       pParmList->Descriptor.FMT1_descriptor.num_of_blocks.ulbytes.byte_1 = ((union ULONGB FAR *)&blocks)->ulbytes.byte_2;      // JJ20030312
+>       pParmList->Descriptor.FMT1_descriptor.num_of_blocks.ulbytes.byte_2 = ((union ULONGB FAR *)&blocks)->ulbytes.byte_1;      // JJ20030312
+>       pParmList->Descriptor.FMT1_descriptor.num_of_blocks.ulbytes.byte_3 = ((union ULONGB FAR *)&blocks)->ulbytes.byte_0;      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1505a1697,1699
+> #endif                                                                                                                         // JJ20030312
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1507a1702
+> #endif                                                                                                                         // JJ20030312
+1508a1704,1705
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1509a1707
+> #endif                                                                                                                         // JJ20030312
+1585a1784,1785
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1589a1790
+> #endif                                                                                                                         // JJ20030312
+1608a1810,1811
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1609a1813
+> #endif                                                                                                                         // JJ20030312
+1620a1825,1826
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1621a1828
+> #endif                                                                                                                         // JJ20030312
+1772a1980,1981
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1773a1983
+> #endif                                                                                                                         // JJ20030312
+1774a1985,1986
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1775a1988
+> #endif                                                                                                                         // JJ20030312
+1814a2028,2030
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>                          sizeof(struct CapabilitiesParmList_10)+sizeof(struct BlockDescriptor),                                // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1815a2032
+> #endif                                                                                                                         // JJ20030312
+1826a2044,2045
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1827a2047
+> #endif                                                                                                                         // JJ20030312
+1830a2051,2052
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1831a2054,2057
+> #endif                                                                                                                         // JJ20030312
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    pCDB->alloc_length.usbytes.byte_1 = sizeof(struct CapabilitiesParmList_10)+sizeof(struct BlockDescriptor);                  // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1832a2059,2061
+> #endif                                                                                                                         // JJ20030312
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1833a2063
+> #endif                                                                                                                         // JJ20030312
+1937a2168,2169
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1941a2174
+> #endif                                                                                                                         // JJ20030312
+1991a2225,2226
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1992a2228
+> #endif                                                                                                                         // JJ20030312
+1993a2230,2231
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1994a2233
+> #endif                                                                                                                         // JJ20030312
+2045a2285,2286
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2048a2290
+> #endif                                                                                                                         // JJ20030312
+2050a2293,2294
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2051a2296
+> #endif                                                                                                                         // JJ20030312
+2052a2298,2299
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2053a2301
+> #endif                                                                                                                         // JJ20030312
+2104a2353,2354
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2105a2356
+> #endif                                                                                                                         // JJ20030312
+2106a2358,2359
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2107a2361
+> #endif                                                                                                                         // JJ20030312
+2183a2438,2439
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2186a2443
+> #endif                                                                                                                         // JJ20030312
+2251a2509,2510
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2252a2512
+> #endif                                                                                                                         // JJ20030312
+2253a2514,2515
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2254a2517
+> #endif                                                                                                                         // JJ20030312
+2264a2528,2586
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> /****************************************************************************                                                  // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * FUNCTION NAME = BuildCDB_ReadFullTOC                                                                                        // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * DESCRIPTION   = Setup CDB for Read TOC command (Full TOC)                                                                   // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  *      BuildCDB_ReadFullTOC (NPUNITCB pUnitCB, UCHAR session_number,                                                          // JJ20030312
+>  *                                              USHORT count,                                                                  // JJ20030312
+>  *                                              NPIORB_CDB FAR *pIORBOut)                                                      // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * INPUT         = pUnitCB         - pointer to UnitCB                                                                         // JJ20030312
+>  *                 session_number  - starting session number                                                                   // JJ20030312
+>  *                 count           - count of descriptors to return                                                            // JJ20030312
+>  *                 pIORBOut        - returned pointer to IORB                                                                  // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * OUTPUT        = NONE                                                                                                        // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * RETURN-NORMAL =                                                                                                             // JJ20030312
+>  * RETURN-ERROR  =                                                                                                             // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  ****************************************************************************/                                                 // JJ20030312
+>                                                                                                                                // JJ20030312
+> VOID BuildCDB_ReadFullTOC (NPUNITCB pUnitCB, UCHAR session_number, USHORT count, NPIORB_CDB FAR *pIORBOut)                     // JJ20030312
+> {                                                                                                                              // JJ20030312
+>    NPIORB_CDB pIORB;                                                                                                           // JJ20030312
+>    USHORT alloc_length;                                                                                                        // JJ20030312
+>    struct CDB_ReadTOC *pCDB;                                                                                                   // JJ20030312
+>                                                                                                                                // JJ20030312
+>    // Build a CDB passthru IORB                                                                                                // JJ20030312
+>    alloc_length =  sizeof(struct TOC_Hdr) +                                                                                    // JJ20030312
+>                    (sizeof(struct FullTOC_Descriptor) * count);                                                                // JJ20030312
+>    if(alloc_length > sizeof(CDB_FullTOCdesc))                                                                                  // JJ20030312
+>       alloc_length = sizeof(CDB_FullTOCdesc);                                                                                  // JJ20030312
+>    BuildIORB_PassthruCDB(pUnitCB,                                                                                              // JJ20030312
+>                          (ULONG)alloc_length,                                                                                  // JJ20030312
+>                          (ULONG)(ppDataSeg + (ULONG)((USHORT)&(CDB_FullTOCdesc))),                                             // JJ20030312
+>                          (NPIORB_CDB FAR *)&pIORB );                                                                           // JJ20030312
+>    pIORB->apt.ControllerCmdLen = sizeof(struct CDB_ReadTOC);                                                                   // JJ20030312
+>    pIORB->apt.Flags |= PT_DIRECTION_IN;                                                                                        // JJ20030312
+>                                                                                                                                // JJ20030312
+>    // Setup the CDB                                                                                                            // JJ20030312
+>    pCDB = (struct CDB_ReadTOC NEAR *)&pIORB->CDB;                                                                              // JJ20030312
+>    pCDB->OpCode = SCSI_READ_TOC;                                                                                               // JJ20030312
+>    pCDB->LUN = pUnitCB->UnitInfo.UnitSCSILUN;                                                                                  // JJ20030312
+>    pCDB->MSF = 1;                                                                                                              // JJ20030312
+>    pCDB->format = 2;  // Full TOC                                                                                              // JJ20030312
+>    pCDB->starting_track = session_number;                                                                                      // JJ20030312
+>    pCDB->alloc_length.usbytes.byte_0 = (UCHAR)(alloc_length >> 8);                                                             // JJ20030312
+>    pCDB->alloc_length.usbytes.byte_1 = (UCHAR)alloc_length;                                                                    // JJ20030312
+> // pCDB->control = 0;                                                                                                          // JJ20030312
+>    *pIORBOut = pIORB;                                                                                                          // JJ20030312
+>                                                                                                                                // JJ20030312
+>    if (pUnitCB->DeviceInfo.product_id_code == HITACHI_3750)                                                                    // JJ20030312
+>       DevHelp_ProcBlock( (ULONG) (PVOID)pIORB, (ULONG) 500, WAIT_IS_INTERRUPTABLE);                                            // JJ20030312
+> }                                                                                                                              // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+> 
+2311a2634,2635
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2312a2637
+> #endif                                                                                                                         // JJ20030312
+2313a2639,2640
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2314a2642
+> #endif                                                                                                                         // JJ20030312
+2315a2644,2645
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2316a2647
+> #endif                                                                                                                         // JJ20030312
+2417a2749,2750
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2419a2753
+> #endif                                                                                                                         // JJ20030312
+2423a2758,2759
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2424a2761
+> #endif                                                                                                                         // JJ20030312
+2427a2765,2766
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2428a2768
+> #endif                                                                                                                         // JJ20030312
+2538a2879,2880
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2539a2882
+> #endif                                                                                                                         // JJ20030312
+2541a2885,2886
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2542a2888
+> #endif                                                                                                                         // JJ20030312
+2560a2907,2908
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2561a2910
+> #endif                                                                                                                         // JJ20030312
+2562a2912,2917
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA.ulbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_3;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_2 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_3 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2566a2922
+> #endif                                                                                                                         // JJ20030312
+2567a2924,2925
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2568a2927
+> #endif                                                                                                                         // JJ20030312
+2571a2931,2932
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2572a2934
+> #endif                                                                                                                         // JJ20030312
+2576a2939,2940
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2577a2942
+> #endif                                                                                                                         // JJ20030312
+2626a2992,2993
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2627a2995
+> #endif                                                                                                                         // JJ20030312
+2629a2998,2999
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2630a3001
+> #endif                                                                                                                         // JJ20030312
+2650a3022,3027
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA.ulbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_3;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_2 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_3 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2654a3032
+> #endif                                                                                                                         // JJ20030312
+2655a3034,3035
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2657a3038
+> #endif                                                                                                                         // JJ20030312
+2705a3087,3088
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2706a3090
+> #endif                                                                                                                         // JJ20030312
+2708a3093,3094
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2709a3096
+> #endif                                                                                                                         // JJ20030312
+2729a3117,3122
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA.ulbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_3;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_2 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_3 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2733a3127
+> #endif                                                                                                                         // JJ20030312
+2734a3129,3130
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2736a3133
+> #endif                                                                                                                         // JJ20030312
+2796a3194,3195
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2797a3197
+> #endif                                                                                                                         // JJ20030312
+2961a3362,3363
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2963a3366
+> #endif                                                                                                                         // JJ20030312
+3137a3541,3542
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3138a3544
+> #endif                                                                                                                         // JJ20030312
+3225a3632,3633
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3227a3636
+> #endif                                                                                                                         // JJ20030312
+3237a3647,3649
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    pIORB->pad = !0;  // do not adjust                                                                                          // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+3244a3657,3659
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    f_BlockCopy ((PBYTE)&(pIORB->CDB), (PBYTE)&cmd_addr[0], cmd_length);                                                        // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3247a3663
+> #endif                                                                                                                         // JJ20030312
+3283a3700,3701
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3284a3703
+> #endif                                                                                                                         // JJ20030312
+3286a3706,3707
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3287a3709
+> #endif                                                                                                                         // JJ20030312
+3298a3721,3722
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3300a3725
+> #endif                                                                                                                         // JJ20030312
+3302a3728,3733
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pCDB->LBA.ulbytes.byte_0 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_3;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_1 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_2;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_2 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_1;                                                      // JJ20030312
+>    pCDB->LBA.ulbytes.byte_3 = ((union ULONGB FAR *)&LBA)->ulbytes.byte_0;                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3306a3738
+> #endif                                                                                                                         // JJ20030312
+3379a3812,3813
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3380a3815
+> #endif                                                                                                                         // JJ20030312
+3384a3820,3821
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3385a3823
+> #endif                                                                                                                         // JJ20030312
+3388a3827,3828
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3389a3830
+> #endif                                                                                                                         // JJ20030312
+3390a3832,3833
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3391a3835
+> #endif                                                                                                                         // JJ20030312

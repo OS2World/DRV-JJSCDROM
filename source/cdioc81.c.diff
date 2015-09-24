@@ -1,0 +1,125 @@
+125a126,129
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    if ((audio->capabilities & DCAPS_NO_AUDIO_CTRL_DURING_PLAY) &&                                                              // JJ20030312
+>        (rc = GetPlayStatus (pUnitCB, &playing)) == STDON && playing)                                                           // JJ20030312
+> #else                                                                                                                          // JJ20030312
+129a134
+> #endif                                                                                                                         // JJ20030312
+567a573,625
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    // Try to retrieve from only 1st session if multisessioning is disabled                                                     // JJ20030312
+>    if(IS_INTERFACE_MMC(pUnitCB) &&                                                                                             // JJ20030312
+>       pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_MULTISESSION_DISABLED)                                                    // JJ20030312
+>    {                                                                                                                           // JJ20030312
+>       // determine how many descriptors are returned                                                                           // JJ20030312
+>       BuildCDB_ReadFullTOC (pUnitCB, 1, 0, (NPIORB_CDB FAR *)&pIORB);  // from 1st session                                     // JJ20030312
+>       rc = SubmitIORB_Wait (pUnitCB, (NPIORB)pIORB);                                                                           // JJ20030312
+>       if(!(rc & STERR))                                                                                                        // JJ20030312
+>       {                                                                                                                        // JJ20030312
+>          struct ReadFullTOC_Data FAR *pCDBData = (struct ReadFullTOC_Data FAR *)CDB_FullTOCdesc;                               // JJ20030312
+>          USHORT desc_count = ((USHORT)pCDBData->toc_hdr.toc_datalength.usbytes.byte_0 * 256 +                                  // JJ20030312
+>                               (USHORT)pCDBData->toc_hdr.toc_datalength.usbytes.byte_1 - 2) / sizeof(struct FullTOC_Descriptor);// JJ20030312
+>          FreeIORB (pUnitCB, pIORB);                                                                                            // JJ20030312
+>          if(desc_count > 99+3)                                                                                                 // JJ20030312
+>             desc_count = 99+3;                                                                                                 // JJ20030312
+>          // retrieve descriptors                                                                                               // JJ20030312
+>          BuildCDB_ReadFullTOC (pUnitCB, 1, desc_count, (NPIORB_CDB FAR *)&pIORB);  // from 1st session                         // JJ20030312
+>          rc = SubmitIORB_Wait (pUnitCB, (NPIORB)pIORB);                                                                        // JJ20030312
+>          if(!(rc & STERR))                                                                                                     // JJ20030312
+>          {                                                                                                                     // JJ20030312
+>             USHORT i;                                                                                                          // JJ20030312
+>             // search disk informations                                                                                        // JJ20030312
+>             for(i = 0;                                                                                                         // JJ20030312
+>                 i < desc_count;                                                                                                // JJ20030312
+>                 i++)                                                                                                           // JJ20030312
+>                if(pCDBData->toc_descriptor[i].session == 1 &&  // 1st session only                                             // JJ20030312
+>                   pCDBData->toc_descriptor[i].ADR == 1)                                                                        // JJ20030312
+>                   switch(pCDBData->toc_descriptor[i].POINT)                                                                    // JJ20030312
+>                   {                                                                                                            // JJ20030312
+>                      case 0xa0:  // lowest track#                                                                              // JJ20030312
+>                         pDataPkt->lowest_track = pCDBData->toc_descriptor[i].PMIN;                                             // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 0xa1:  // highest track#                                                                             // JJ20030312
+>                         pDataPkt->highest_track = pCDBData->toc_descriptor[i].PMIN;                                            // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 0xa2:  // leadout address                                                                            // JJ20030312
+>                         pDataPkt->frame = pCDBData->toc_descriptor[i].PFRAME;                                                  // JJ20030312
+>                         pDataPkt->sec   = pCDBData->toc_descriptor[i].PSEC;                                                    // JJ20030312
+>                         pDataPkt->min   = pCDBData->toc_descriptor[i].PMIN;                                                    // JJ20030312
+>                         pDataPkt->zero  = 0;                                                                                   // JJ20030312
+>                         pUnitCB->DeviceInfo.leadout.ul_redbook.frame = pDataPkt->frame;                                        // JJ20030312
+>                         pUnitCB->DeviceInfo.leadout.ul_redbook.sec   = pDataPkt->sec;                                          // JJ20030312
+>                         pUnitCB->DeviceInfo.leadout.ul_redbook.min   = pDataPkt->min;                                          // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                   }                                                                                                            // JJ20030312
+>             FreeIORB (pUnitCB, pIORB);                                                                                         // JJ20030312
+>             return (rc);                                                                                                       // JJ20030312
+>          }                                                                                                                     // JJ20030312
+>       }                                                                                                                        // JJ20030312
+>       FreeIORB (pUnitCB, pIORB);                                                                                               // JJ20030312
+>    }                                                                                                                           // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+677a736,787
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    // Try to retrieve from only 1st session if multisessioning is disabled                                                     // JJ20030312
+>    if(IS_INTERFACE_MMC(pUnitCB) &&                                                                                             // JJ20030312
+>       pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_MULTISESSION_DISABLED)                                                    // JJ20030312
+>    {                                                                                                                           // JJ20030312
+>       // determine how many descriptors are returned                                                                           // JJ20030312
+>       BuildCDB_ReadFullTOC (pUnitCB, 1, 0, (NPIORB_CDB FAR *)&pIORB);  // from 1st session                                     // JJ20030312
+>       rc = SubmitIORB_Wait (pUnitCB, (NPIORB)pIORB);                                                                           // JJ20030312
+>       if(!(rc & STERR))                                                                                                        // JJ20030312
+>       {                                                                                                                        // JJ20030312
+>          struct ReadFullTOC_Data FAR *pCDBData = (struct ReadFullTOC_Data FAR *)CDB_FullTOCdesc;                               // JJ20030312
+>          USHORT desc_count = ((USHORT)pCDBData->toc_hdr.toc_datalength.usbytes.byte_0 * 256 +                                  // JJ20030312
+>                               (USHORT)pCDBData->toc_hdr.toc_datalength.usbytes.byte_1 - 2) / sizeof(struct FullTOC_Descriptor);// JJ20030312
+>          FreeIORB (pUnitCB, pIORB);                                                                                            // JJ20030312
+>          if(desc_count > 99+3)                                                                                                 // JJ20030312
+>             desc_count = 99+3;                                                                                                 // JJ20030312
+>          // retrieve descriptors                                                                                               // JJ20030312
+>          BuildCDB_ReadFullTOC (pUnitCB, 1, desc_count, (NPIORB_CDB FAR *)&pIORB);  // from 1st session                         // JJ20030312
+>          rc = SubmitIORB_Wait (pUnitCB, (NPIORB)pIORB);                                                                        // JJ20030312
+>          if(!(rc & STERR))                                                                                                     // JJ20030312
+>          {                                                                                                                     // JJ20030312
+>             USHORT i;                                                                                                          // JJ20030312
+>             // search disk informations                                                                                        // JJ20030312
+>             for(i = 0;                                                                                                         // JJ20030312
+>                 i < desc_count;                                                                                                // JJ20030312
+>                 i++)                                                                                                           // JJ20030312
+>                if(pCDBData->toc_descriptor[i].session == 1 &&  // 1st session only                                             // JJ20030312
+>                   pCDBData->toc_descriptor[i].POINT == ((struct AudioTrackInfo FAR *)pRP->ParmPacket)->track_number)           // JJ20030312
+>                {                                                                                                               // JJ20030312
+>                   pDataPkt->frame   = pCDBData->toc_descriptor[i].PFRAME;                                                      // JJ20030312
+>                   pDataPkt->sec     = pCDBData->toc_descriptor[i].PSEC;                                                        // JJ20030312
+>                   pDataPkt->min     = pCDBData->toc_descriptor[i].PMIN;                                                        // JJ20030312
+>                   pDataPkt->zero    = 0;                                                                                       // JJ20030312
+>                   pDataPkt->control = (UCHAR)(pCDBData->toc_descriptor[i].ADR |                                                // JJ20030312
+>                                               (pCDBData->toc_descriptor[i].control << 4));                                     // JJ20030312
+>                   break;                                                                                                       // JJ20030312
+>                }                                                                                                               // JJ20030312
+>             if((pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_TRACK1NEGATIVE_FIXED) &&                                        // JJ20030312
+>                ((struct AudioTrackInfo FAR *)pRP->ParmPacket)->track_number == 1 &&                                            // JJ20030312
+>                (LONG)RedBookToHSG(*(ULONG FAR *)&pDataPkt->frame) < (LONG)0)                                                   // JJ20030312
+>             {                                                                                                                  // JJ20030312
+>                pDataPkt->frame = 0;                                                                                            // JJ20030312
+>                pDataPkt->sec   = 2;                                                                                            // JJ20030312
+>                pDataPkt->min   = 0;                                                                                            // JJ20030312
+>             }                                                                                                                  // JJ20030312
+>             FreeIORB (pUnitCB, pIORB);                                                                                         // JJ20030312
+>             return (rc);                                                                                                       // JJ20030312
+>          }                                                                                                                     // JJ20030312
+>       }                                                                                                                        // JJ20030312
+>       FreeIORB (pUnitCB, pIORB);                                                                                               // JJ20030312
+>    }                                                                                                                           // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+720a831,840
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>       if((pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_TRACK1NEGATIVE_FIXED) &&                                              // JJ20030312
+>          ((struct AudioTrackInfo FAR *)pRP->ParmPacket)->track_number == 1 &&                                                  // JJ20030312
+>          (LONG)RedBookToHSG(*(ULONG FAR *)&pDataPkt->frame) < (LONG)0)                                                         // JJ20030312
+>       {                                                                                                                        // JJ20030312
+>          pDataPkt->frame = 0;                                                                                                  // JJ20030312
+>          pDataPkt->sec   = 2;                                                                                                  // JJ20030312
+>          pDataPkt->min   = 0;                                                                                                  // JJ20030312
+>       }                                                                                                                        // JJ20030312
+> #endif                                                                                                                         // JJ20030312

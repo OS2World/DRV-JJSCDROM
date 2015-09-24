@@ -1,0 +1,10 @@
+115a116,117
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+144a147,152
+> #endif                                                                                                                         // JJ20030312
+> 
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> // default 64bytes CDB_Data is too small to store Full TOC descriptors                                                         // JJ20030312
+> UCHAR  CDB_FullTOCdesc[1126] = {0}; // 99 tracks + A1/A2/A3 + desc header                                                      // JJ20030312
+> #endif                                                                                                                         // JJ20030312

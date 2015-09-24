@@ -1,0 +1,97 @@
+215a216,224
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>       ((USHORT NEAR*)&pUnitCB->InquiryData.vendor_id)[0] ='U'+'S'*256;                                                         // JJ20030312
+>       ((USHORT NEAR*)&pUnitCB->InquiryData.vendor_id)[1] ='B'+' '*256;                                                         // JJ20030312
+>       ((USHORT NEAR*)&pUnitCB->InquiryData.vendor_id)[2] =' '+' '*256;                                                         // JJ20030312
+>       ((USHORT NEAR*)&pUnitCB->InquiryData.vendor_id)[3] =' '+' '*256;                                                         // JJ20030312
+>       ((USHORT NEAR*)&pUnitCB->InquiryData.product_id)[0] ='C'+'D'*256;                                                        // JJ20030312
+>       ((USHORT NEAR*)&pUnitCB->InquiryData.product_id)[1] ='-'+'R'*256;                                                        // JJ20030312
+>       ((USHORT NEAR*)&pUnitCB->InquiryData.product_id)[2] ='O'+'M'*256;                                                        // JJ20030312
+> #else                                                                                                                          // JJ20030312
+229a239
+> #endif                                                                                                                         // JJ20030312
+262a273,275
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>       if (!IS_INTERFACE_MMC(pUnitCB))                                                                                          // JJ20030312
+> #else                                                                                                                          // JJ20030312
+263a277
+> #endif                                                                                                                         // JJ20030312
+325a340,344
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    NPIORB_CDB    pIORB;                                                                                                        // JJ20030312
+>    struct CapabilitiesParmList_10 NEAR *pCDBData;                                                                              // JJ20030312
+>    USHORT        status;                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+329a349,400
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    // Issue Mode Sense to read the CD-ROM capabilites page.                                                                    // JJ20030312
+>    BuildCDB_SenseCapabilities (pUnitCB, (NPIORB_CDB FAR *) &pIORB);                                                            // JJ20030312
+>    status=init_submit_cdb (pUnitCB, pIORB, FALSE);                                                                             // JJ20030312
+>    // Set the capability bits in the unit control block                                                                        // JJ20030312
+>    if ( !(status & IORB_ERROR) )                                                                                               // JJ20030312
+>    {                                                                                                                           // JJ20030312
+>       pCDBData = (struct CapabilitiesParmList_10 NEAR *) pIORB->CDB_data;                                                      // JJ20030312
+>       if (pCDBData->CapPage.page_code == PAGE_CAPABILITIES)                                                                    // JJ20030312
+>       {                                                                                                                        // JJ20030312
+>          if (pCDBData->CapPage.capabilities & CP_MULTISESSION)                                                                 // JJ20030312
+>             audio->capabilities |= DCAPS_MULTISESSION;                                                                         // JJ20030312
+>          if (pCDBData->CapPage.capabilities & CP_MODE2_FORM2)                                                                  // JJ20030312
+>             audio->capabilities |= DCAPS_XA;                                                                                   // JJ20030312
+>          if (pCDBData->CapPage.capabilities & CP_CDDA)                                                                         // JJ20030312
+>             audio->capabilities |= DCAPS_CDDA;                                                                                 // JJ20030312
+>          if (pCDBData->CapPage.capabilities & CP_INDEPENDENT_VOLUME_LEVELS)                                                    // JJ20030312
+>             audio->capabilities |= DCAPS_INDEPENDENT_VOLUME_LEVELS;                                                            // JJ20030312
+>          if ( (pCDBData->CapPage.num_volume_levels.usbytes.byte_0 != 0) ||                                                     // JJ20030312
+>               (pCDBData->CapPage.num_volume_levels.usbytes.byte_1 > 2))                                                        // JJ20030312
+>             audio->capabilities |= DCAPS_VARIABLE_VOLUME;                                                                      // JJ20030312
+>          audio->capabilities |= (DCAPS_MUTE | DCAPS_SCSI3_MMC);                                                                // JJ20030312
+>          if (pCDBData->CapPage.capabilities & CP_UPC)                                                                          // JJ20030312
+>             audio->capabilities |= (DCAPS_UPC | DCAPS_UPC_IN_ASCII);                                                           // JJ20030312
+>          if ((pCDBData->CapPage.capabilities & CP_INDIVIDUAL_CHANGER) == CP_INDIVIDUAL_CHANGER)                                // JJ20030312
+>             audio->capabilities |= DCAPS_INDIVIDUAL_CHANGER;                                                                   // JJ20030312
+>          else if ((pCDBData->CapPage.capabilities & CP_CARTRIDGE_CHANGER) == CP_CARTRIDGE_CHANGER)                             // JJ20030312
+>             audio->capabilities |= DCAPS_CARTRIDGE_CHANGER;                                                                    // JJ20030312
+>       }                                                                                                                        // JJ20030312
+>    }                                                                                                                           // JJ20030312
+>    if (CDFlags & CDF_INIT_COMPLETE)                                                                                            // JJ20030312
+>       FreeIORB (pUnitCB, pIORB);                                                                                               // JJ20030312
+>    if (audio->capabilities & (DCAPS_CARTRIDGE_CHANGER |DCAPS_INDIVIDUAL_CHANGER))                                              // JJ20030312
+>    {                                                                                                                           // JJ20030312
+>       BuildCDB_MechanismStatus (pUnitCB, (NPIORB_CDB FAR *) &pIORB, sizeof(struct Mechanism_Hdr));                             // JJ20030312
+>       status=init_submit_cdb (pUnitCB, pIORB, FALSE);                                                                          // JJ20030312
+>       if ( !(status & IORB_ERROR) )                                                                                            // JJ20030312
+>       {                                                                                                                        // JJ20030312
+>          struct MechanismStatusList NEAR *pCDBData = (struct MechanismStatusList NEAR *) pIORB->CDB_data;                      // JJ20030312
+>          pUnitCB->DeviceInfo.Slots.Maximum = pCDBData->Mechanism_Header.Number_Of_Slots;                                       // JJ20030312
+>          pUnitCB->DeviceInfo.Slots.Current = pCDBData->Mechanism_Header.CurrentSlot |                                          // JJ20030312
+>                                              (UCHAR)(pCDBData->Mechanism_Header.CurrentSlot_High << 5);                        // JJ20030312
+>       }                                                                                                                        // JJ20030312
+>       else                                                                                                                     // JJ20030312
+>          audio->capabilities &= ~(DCAPS_CARTRIDGE_CHANGER | DCAPS_INDIVIDUAL_CHANGER);                                         // JJ20030312
+>       if (CDFlags & CDF_INIT_COMPLETE)                                                                                         // JJ20030312
+>          FreeIORB (pUnitCB, pIORB);                                                                                            // JJ20030312
+>    }                                                                                                                           // JJ20030312
+>    if(audio->capabilities & DCAPS_SCSI3_MMC)                                                                                   // JJ20030312
+>       return;                                                                                                                  // JJ20030312
+> #else                                                                                                                          // JJ20030312
+>    // set default capabilities because the device may NOT be in the table
+333a405
+> #endif                                                                                                                         // JJ20030312
+502a575,577
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>          audio->capabilities |= (DCAPS_UPC | DCAPS_UPC_IN_ASCII);                                                              // JJ20030312
+> #else                                                                                                                          // JJ20030312
+504a580
+> #endif                                                                                                                         // JJ20030312
+558a635,638
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>             pUnitCB->DeviceInfo.Slots.Current=pCDBData->Mechanism_Header.CurrentSlot |                                         // JJ20030312
+>                                                         (UCHAR)(pCDBData->Mechanism_Header.CurrentSlot_High << 5);             // JJ20030312
+> #else                                                                                                                          // JJ20030312
+559a640
+> #endif                                                                                                                         // JJ20030312
+747a829,832
+> 
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>       Adjust_ModeSense10Result(pIORB);  // Adjust MODE SENSE(10) results                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312

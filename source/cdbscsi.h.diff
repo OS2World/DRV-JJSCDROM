@@ -1,0 +1,96 @@
+736a737,740
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> #define CP_DIGITAL_PORT_1            0x00000004                                                                                // JJ20030312
+> #define CP_DIGITAL_PORT_2            0x00000008                                                                                // JJ20030312
+> #else                                                                                                                          // JJ20030312
+738a743
+> #endif                                                                                                                         // JJ20030312
+741a747,749
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030326
+> #define CP_BUF                       0x00000080                                                                                // JJ20030326
+> #else                                                                                                                          // JJ20030326
+742a751
+> #endif                                                                                                                         // JJ20030326
+749a759,761
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> #define CP_BARCODE                   0x00008000                                                                                // JJ20030312
+> #else                                                                                                                          // JJ20030312
+750a763
+> #endif                                                                                                                         // JJ20030312
+763a777,781
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> #define CP_SOFTWARE_SLOT_SELECTION   0x08000000                                                                                // JJ20030312
+> #define CP_SIDE_CHANGE               0x10000000                                                                                // JJ20030326
+> #define CP_RW_LEADIN_SUPPORT         0x20000000                                                                                // JJ20030326
+> #else                                                                                                                          // JJ20030312
+766a785
+> #endif                                                                                                                         // JJ20030312
+1437a1457,1460
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>         UCHAR   format       : 4;                                                                                              // JJ20030312
+>         UCHAR   Reserved_2   : 4;                                                                                              // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1438a1462
+> #endif                                                                                                                         // JJ20030312
+1472a1497,1519
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> struct FullTOC_Descriptor {                                                                                                    // JJ20030312
+>         UCHAR   session;                                                                                                       // JJ20030312
+>         UCHAR   control : 4;                                                                                                   // JJ20030312
+>         UCHAR   ADR     : 4;                                                                                                   // JJ20030312
+>         UCHAR   TNO;                                                                                                           // JJ20030312
+>         UCHAR   POINT;                                                                                                         // JJ20030312
+>         UCHAR   Min;                                                                                                           // JJ20030312
+>         UCHAR   Sec;                                                                                                           // JJ20030312
+>         UCHAR   Frame;                                                                                                         // JJ20030312
+>         UCHAR   Zero;                                                                                                          // JJ20030312
+>         UCHAR   PMIN;                                                                                                          // JJ20030312
+>         UCHAR   PSEC;                                                                                                          // JJ20030312
+>         UCHAR   PFRAME;                                                                                                        // JJ20030312
+> };                                                                                                                             // JJ20030312
+> struct ReadFullTOC_Data {                                                                                                      // JJ20030312
+>         struct                                                                                                                 // JJ20030312
+>         TOC_Hdr        toc_hdr;                                                                                                // JJ20030312
+>         struct                                                                                                                 // JJ20030312
+>         FullTOC_Descriptor toc_descriptor[1];                                                                                  // JJ20030312
+> };                                                                                                                             // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+1833a1881,1885
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>         UCHAR Door_Open    :1;                                                                                                 // JJ20030312
+>         UCHAR Reserved_1   :1;                                                                                                 // JJ20030312
+>         UCHAR CurrentSlot_High :3;                                                                                             // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1834a1887
+> #endif                                                                                                                         // JJ20030312
+1955a2009,2013
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>         USHORT subchannel   : 3;                                                                                               // JJ20030312
+>         USHORT reserved_4   : 5;                                                                                               // JJ20030312
+>         UCHAR  reserved_5;                                                                                                     // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1959a2018
+> #endif                                                                                                                         // JJ20030312
+1987a2047,2051
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>         USHORT subchannel   : 3;                                                                                               // JJ20030312
+>         USHORT reserved_5   : 5;                                                                                               // JJ20030312
+>         UCHAR  reserved_6;                                                                                                     // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1991a2056
+> #endif                                                                                                                         // JJ20030312
+2056a2122,2125
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030326
+>         UCHAR   RC          : 2;                                                                                               // JJ20030326
+>         UCHAR   reserved_1  : 6;                                                                                               // JJ20030326
+> #else                                                                                                                          // JJ20030326
+2057a2127
+> #endif                                                                                                                         // JJ20030326
+2061a2132,2135
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030326
+>         union                                                                                                                  // JJ20030326
+>         USHORTB drive_speed_write;                                                                                             // JJ20030326
+> #else                                                                                                                          // JJ20030326
+2063a2138
+> #endif                                                                                                                         // JJ20030326

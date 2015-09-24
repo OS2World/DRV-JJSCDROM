@@ -1,0 +1,537 @@
+<!doctype html public "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=Shift_JIS">
+  <meta name="language" content="ja-jp">
+  <meta name="author" content="Takayuki 'January June' Suwa / Beliefia Productions">
+  <meta name="date" content="2003-03-28T01:48:24+09:00">
+  <link rev="made" href="mailto:jjsuwa@sys3175.com">
+  <title>修正版 OS/2 CD-ROM / CD-RW / DVDs デバイスマネージャードライバー、ビルドJJ20030328 取扱説明書</title>
+ </head>
+
+ <body>
+
+  <h1>修正版 OS/2 CD-ROM / CD-RW / DVDs デバイスマネージャードライバー、ビルドJJ20030328</h1>
+  CD-DAデジタル読み取り / CD-XA読み取り / マルチセッション / CD-Extra 機能強化<br>
+  <strong>Modification copyright (c) 1999-2003 Takayuki 'January June' Suwa / Beliefia Productions<br>
+          Modification copyright (c) 2000 Robert Lalla</strong>
+  <hr>
+
+  <hr>
+
+  <h1>0. <a name="0">目次</a></h1>
+  <ul>
+   <li>0. <a href="#0">目次</a></li>
+   <li>1. <a href="#1">はじめに</a>
+       <ul>
+        <li>1.1. <a href="#1.1">著作権・免責</a></li>
+        <li>1.2. <a href="#1.2">動作環境</a></li>
+        <li>1.3. <a href="#1.3">連絡先</a></li>
+        <li>1.4. <a href="#1.4">改訂履歴</a></li>
+       </ul></li>
+   <li>2. <a href="#2">使い方</a>
+       <ul>
+        <li>2.1. <a href="#2.1">アーカイブ内容</a></li>
+        <li>2.2. <a href="#2.2">ドライバーのインストール</a></li>
+        <li>2.3. <a href="#2.3">JJSCDROM.DMDオプション</a>
+            <ul>
+             <li>2.3.1. <a href="#2.3.1">CONFIG.SYS書式</a></li>
+             <li>2.3.2. <a href="#2.3.2">オプション構文図</a></li>
+             <li>2.3.3. <a href="#2.3.3">オプション説明</a></li>
+             <li>2.3.4. <a href="#2.3.4">起動時表示について</a></li>
+            </ul></li>
+       </ul></li>
+   <li>3. <a href="#3">追加・修正されたIOCtl機能</a>
+       <ul>
+        <li>3.1. <a href="#3.1"><tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_FEATURE_CTRL</tt></a></li>
+        <li>3.2. <a href="#3.2"><tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_DEVICESTATUS</tt></a></li>
+        <li>3.3. <a href="#3.3"><tt>IOCTL_CDROMDISK2</tt> - <tt>CDROMDISK2_FEATURES</tt></a></li>
+       </ul></li>
+   <li>4. <a href="#4">クレジット</a></li>
+  </ul>
+  <hr>
+
+  <hr>
+
+  <h1>1. <a name="1">はじめに</a></h1>
+  JJSCDROM.DMDは修正版のOS/2 CD-ROM / CD-RW / DVDs デバイスマネージャードライバー(OS2CDROM.DMD)であり、最新のOS/2 DDKオンラインソースコード(DDK_020517)に基づいています。<br>
+  本ドライバーは以下の機能をサポートします :
+  <ul>
+   <li>ATAPIドライブと同様に、デフォルトでSCSI-3/MMC準拠ドライブの能力を自動認識します。</li>
+   <li>&quot;CD-Extra&quot;(追加データセッションのあるオーディオCD)をマウントできます。</li>
+   <li>装置単位での機能有効化を指定できます :
+       <ul>
+        <li>&quot;CD-DA読み取り可&quot;、&quot;CD-XA読み取り可&quot;及び&quot;マルチセッション対応&quot;フラグの強制オン指定</li>
+        <li>非SCSI-3/MMC準拠ドライブに対する、ベンダー固有SCSI CD-DAデジタル読み取り / CD-XA読み取り / マルチセッション操作 / UPC読み取りの強制設定</li>
+       </ul></li>
+   <li>ヤマハCDR10xのようなWORMスタイルの旧式CD-Rドライブ、またはRSJ CD-Writer LOCKCDR.FLTで処理された疑似WORMドライブに対し、強制的にCD-ROMとして扱わせることができます。</li>
+   <li>装置単位でドライブを無視することができます。</li>
+   <li>より豊富な/Vオプション表示を提供します。</li>
+   <li>追加されたIOCtl機能により、マルチセッション動作、及び負のトラック1開始LBAアドレス修正を操作できます(Midbar CDS-200対策)。</li>
+   <li>もちろん公式OS2CDROM.DMDと機能的に同等であり、CD-RWまたはDVDでのUDF書き込み・フォーマット、及びUSB接続ドライブをサポートします。</li>
+  </ul>
+  <hr>
+
+  <h2>1.1. <a name="1.1">著作権・免責</a></h2>
+  <ol>
+   <li>本ソフトウェアの修正部分及び付随文書一式(以降、「製品」)の著作権は、全てそれらの作成者・権利保持者である諏訪 貴介(すわ たかゆき)及びBeliefia Productions、並びにRobert Lalla氏に帰属します。</li>
+   <li>本製品は、特定物として現存するがままの状態で提供され、商品性及び特定目的適合性の保証を含むいかなる明示または黙示の保証も適用されません。</li>
+   <li>権利保持者は、契約上の責任、もしくは違法行為(過失等を含む)であるとを問わず、本製品の使用によるいかなる損害に関しても、予見の有無を問わず、責任を負いません。</li>
+  </ol>
+  JJSCDROM.DMDの導入に際しては、上記の条項に同意して下さい。もし、上記条項に同意できない場合は、本製品に含まれるファイルの全てを削除して下さい。
+
+  <hr>
+
+  <h2>1.2. <a name="1.2">動作環境</a></h2>
+  本ソフトウェアは以下の環境で動作します :
+  <ul>
+   <li>OS/2バージョン2以降 (OS/2 v2.x / Warp v3 / WarpServer v4 / Warp v4 / WSeB / MCPs / ACPs / eCS、単一プロセッサまたはマルチプロセッサ)<br>
+       (lxLite圧縮版の場合はバージョン3以降)</li>
+   <li>一台以上のCD-ROM / CD-RW / DVDs装置</li>
+  </ul>
+  <hr>
+
+  <h2>1.3. <a name="1.3">連絡先</a></h2>
+  本製品に関するご質問・お問い合せにつきましては、電子メール
+  <ul>
+   <li><a href="mailto:jjsuwa@sys3175.com">mailto:jjsuwa@sys3175.com</a></li>
+  </ul>
+  にて受け付け致します。その他の連絡方法についてはご容赦下さい。
+  <hr>
+
+  <h2>1.4. <a name="1.4">改訂履歴</a></h2>
+  <ul>
+   <li><strong>ビルドJJ20000711</strong> - July 11th,2000
+       <ol>
+        <li>Robert Lalla氏による&quot;CD-Extra&quot;サポートコードを追加。多謝。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20010825</strong> - August 25th,2001
+       <ol>
+        <li>再構築。DDK_000821ソースに基づいたことにより、CD-RWやDVDの書き込み・フォーマット、及びUSB接続ドライブサポートコードが組み込まれた。</li>
+        <li>NEC-46xマルチセッション対応有効化機能を追加。</li>
+        <li>オリジナルDDKオンラインソースコードからのGNU-diff差分情報ファイルを同梱。</li>
+        <li>デバッグ用のシンボル情報ファイルを同梱。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20010827</strong> - August 27th,2001
+       <ol>
+        <li>新規'マルチセッション動作制御'IOCtl {カテゴリ IOCTL_CDROMDISK (0x80) 機能 CDROMDISK_MS_CTRL (0x4a)}を追加。</li>
+        <li>IOCTL_CDROMDISK - CDROMDISK_DEVICESTATUSデバイス状況にビット28-29を追加。</li>
+        <li>新規ビットFEATURE_MSCTRL_SUPPORT (0x00008000)を機能IOCtl{カテゴリIOCTL_CDROMDISK2 (0x82) 機能 CDROMDISK2_FEATURES (0x63)}に追加。</li>
+        <li>lxLite圧縮版を同梱。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20010828</strong> - August 28th,2001
+       <ol>
+        <li>'マルチセッション動作制御'IOCtlの実装が不十分だったのを修正。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20010911</strong> - September 11th,2001
+       <ol>
+        <li>/V表示LUN桁数を2桁に増加(ワイドSCSIなどへの対策)。</li>
+        <li>リソースマネージャーへの対応。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20010913</strong> - September 13th,2001
+       <ol>
+        <li>コマンドライン解析部バグ(行末を無視する可能性)を修正。</li>
+        <li>/VPオプション(表示後一時停止)を追加。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20020109</strong> - January 9th,2002
+       <ol>
+        <li>リソースマネージャー対応を撤回。誰かリソースマネージャー対応法を教えて下さい(笑)</li>
+       </ol></li>
+   <li><strong>ビルドJJ20020113</strong> - January 13th,2002
+       <ol>
+        <li>CD-RWランダムパケット書き込み能力認識を追加(試験段階・未検証)。</li>
+        <li>SCSI-3/MMC準拠ドライブ能力認識を追加。CD-DA読み取り(検証済) / CD-XA読み取り(未検証) / マルチセッション(検証済)能力をオプション指定なしで自動認識・使用します。</li>
+        <li>上記に関連して、幾つかのSCSI-3/MMC / ATAPI Mode Sense (0x5a) - CD Capabilities and Mechanical Status Page (0x2a)処理にてブロック記述子長が無視される問題を修正。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20020318</strong> - March 18th,2002
+       <ol>
+        <li>ATAPI装置でのブロック記述子長関連修正を撤回(副作用の可能性があるため)。</li>
+        <li>makefile及びDDKツールパス配置を標準化。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20020824</strong> - August 24th,2002
+       <ol>
+        <li>VCDROM.SYS通信の問題を修正。VDM / WinOS2での動作が改善された。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20021016</strong> - October 16th,2002
+       <ol>
+        <li>再構築。DDK_020517ソースに基づいたことにより、複数のCD-RWやDVDのパケット書き込みに対する修正が組み込まれた。</li>
+        <li>ソースに最適化安全のためのプラグマを追加し、最適化を強化。</li>
+        <li>CD-RWランダムパケット書き込み能力認識を改良(試験段階・未検証)。</li>
+        <li>SCSI-3/MMC / ATAPI Mode Sense (0x5a)のブロック記述子処理を改良。</li>
+        <li>'マルチセッション動作制御'IOCtl実装を修正・改良。SCSI-3/MMC / ATAPIドライブで第一セッションTOCのみに制限することが可能に(Midbar CDS-200対策)。</li>
+        <li>'負のトラック1開始LBA修正'機能を追加(Midbar CDS-200対策)し、'マルチセッション動作制御'IOCtlを'機能制御'に改名。</li>
+        <li>Sant Coetzer氏による本文書(英語版)の校正。多謝。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20021018</strong> - October 18th,2002
+       <ol>
+        <li>SCSI-3/MMC / ATAPIドライブではSCSIベンダー固有機能強制を全て無視するように変更。</li>
+        <li>CD-DA Audio Channel Control処理を改良。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20021027</strong> - October 27th,2002
+       <ol>
+        <li>SCSI-3/MMC準拠チェンジャードライブ対応を追加(試験段階・未検証)。</li>
+        <li>非SCSI-3/MMC準拠ドライブに対するUPC読み取り機能強制オプション(/FUx)を追加。</li>
+        <li>日本語文書を追加。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20021112</strong> - November 12th,2002
+       <ol>
+        <li>CD-DA / CD-XAセクタ読み取り、メディア排出などを含む、ビルドJJ20021016より導入された深刻な複数の問題を修正。</li>
+        <li>主に冗長なIORBゼロクリアを捨て去ることにより、サイズ面での最適化を実施。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20021119</strong> - November 19th,2002
+       <ol>
+        <li>リソースマネージャー対応変更を再度追加。RMデバイス/論理ビューにCD-ROMデバイス/論理装置が表示されるようになった。</li>
+        <li>コンパイラ最適化スイッチ/Ot(速度重視)から/Os(サイズ重視)に変更。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20030312</strong> - March 12th,2003
+       <ol>
+        <li>誤ったCD-RWパケット書き込み、特に増分書き込みに関する修正を撤去。これにより、オリジナル同様にCD-RWメディアでのUDF書き込み・フォーマットが可能となった(TEAC CD-W216Eにて確認)。</li>
+        <li>SCSI-3/MMC / ATAPI Mode Sense (0x5a)ブロック記述子処理をより影響が少なくなるように変更。</li>
+        <li>サイズ面での最適化を実施。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20030326</strong> - March 26th,2003
+       <ol>
+        <li>64kB内部CD-RW増分書き込みバッファ数を、以前の4倍の16に増量。</li>
+        <li>内部CD-RW増分書き込みバッファがフラッシュされる際に物理的に解放されるように修正。</li>
+        <li>長らく忘れていた/FCT CD-DAシーク修正を追加(未検証)。</li>
+        <li>書き込み可能装置状態が特定の装置製品IDではなくメディア種別(-R/RW/RAM)を反映するように修正。</li>
+       </ol></li>
+   <li><strong>ビルドJJ20030328</strong> - March 28th,2003
+       <ol>
+        <li>ビルドJJ20030312より導入されたマルチセッション/CD-Extra能力の欠落を修正。Rotondi Marco並びにRoy Baerwaldの両氏に感謝。</li>
+       </ol></li>
+  </ul>
+  <hr>
+
+  <hr>
+
+  <h1>2. <a name="2">使い方</a></h1>
+  <hr>
+
+  <h2>2.1. <a name="2.1">アーカイブ内容</a></h2>
+  <dl>
+   <dt><tt>JJSCDROM.dmd</tt></dt>
+    <dd>修正版 OS/2 CD-ROM / CD-RW / DVDs デバイスマネージャードライバーファイル</dd>
+   <dt><tt>JJSCDROM.sym</tt></dt>
+    <dd>デバッグ用のシンボル情報ファイル</dd>
+   <dt><tt>README.htm</tt></dt>
+    <dd>本文書の英語版</dd>
+   <dt><tt>READMEJ.htm</tt></dt>
+    <dd>本文書</dd>
+   <dt><tt>cmprssed\JJSCDROM.dmd</tt></dt>
+    <dd>JJSCDROM.dmd lxLite圧縮版。Warp v3以降が必要。多分動作します。</dd>
+   <dt><tt>source\source.zip</tt></dt>
+    <dd>ZIP圧縮された、オリジナルDDKオンラインソースコードからのGNU-diff差分情報ファイル(ロングファイル名あり)</dd>
+  </dl>
+  <hr>
+
+  <h2>2.2. <a name="2.2">ドライバーのインストール</a></h2>
+  <ol>
+   <li>アーカイブを都合のよい場所に展開します(例: C:\JJSCDROM)。</li>
+   <li>CONFIG.SYSから
+       <table border="1"><tbody><tr><td>
+<pre>DEVICE=<i>d</i>:\OS2\BOOT\OS2CDROM.DMD</pre>
+       </td></tr></tbody></table>
+       行を検索し、それを削除するか無効化します。</li>
+   <li>CONFIG.SYSに
+       <table border="1"><tbody><tr><td>
+<pre>DEVICE=<i>d</i>:\<i>path</i>\JJSCDROM.dmd</pre>
+       </td></tr></tbody></table>
+       行を追加します(<i>d</i>及び<i>path</i>は実際のインストール先ドライブ / パスと置き換えて下さい)</li>
+   <li>システムを再始動します。</li>
+  </ol>
+  <hr>
+
+
+
+  <h2>2.3. <a name="2.3">JJSCDROM.DMDオプション</a></h2>
+  <hr>
+
+  <h3>2.3.1. <a name="2.3.1">CONFIG.SYS書式</a></h3>
+  <table border="1"><tbody><tr><td>
+<pre>DEVICE=d:\path\JJSCDROM.DMD [オプション]</pre>
+  </td></tr></tbody></table>
+  <hr>
+
+  <h3>2.3.2. <a name="2.3.2">オプション構文図</a></h3>
+  <table border="1"><tbody><tr><td>
+<pre>----+- /Q -------+-+--- /F[C[+|S|T]|X[+|T|S|N]|M[+|T|S|C|N|H|X]|U[U|P|A]] -+---->
+  ^ |          ^ | | ^                                                     | ^
+  | +- /V[P] ->| | | +-----------------------------------------------------+ |
+  | +- /R:n -->| | +---------------------------------------------------------+
+  | +- /S ---->| |
+  | +- /W -----+ |
+  | +----------+ |
+  +--------------+
+
+&nbsp;
+  --+--- /U:n -+--- /F[C[+|S|T]|X[+|T|S|N]|M[+|T|S|C|N|H|X]|U[U|P|A]] -+---+---||
+    | ^        | ^                                                     | ^ | ^
+    | |        | +-----------------------------------------------------+ | | |
+    | |        +- /I ----------------------------------------------------+ | |
+    | +--------------------------------------------------------------------+ |
+    +------------------------------------------------------------------------+</pre>
+  </td></tr></tbody></table>
+  <hr>
+
+  <h3>2.3.3. <a name="2.3.3">オプション説明</a></h3>
+  <dl>
+   <dt>/Q</dt>
+    <dd>寡黙。組み込まれなかった際にもメッセージを表示しません。</dd>
+   <dt>/V</dt>
+    <dd>饒舌。CD-ROM装置の情報を表示します。</dd>
+   <dt>/VP</dt>
+    <dd>/Vと同じですが、終わり際に一時停止します(PAUSEONERROR=YESが必要)</dd>
+   <dt>/R:n</dt>
+    <dd>少なくともn個分ドライブ文字を確保します(ドライブ文字予約)。</dd>
+   <dt>/S</dt>
+    <dd>SCSI-3/MMC / ATAPIチェンジャー装置であっても1ドライブ文字だけ割り当てます。</dd>
+   <dt>/W</dt>
+    <dd>全WORMスタイルデバイスをCD-ROMとして扱います。特定の装置を除外したい場合は/U:n /Iオプションを使用して下さい。</dd>
+   <dt>/U:n</dt>
+    <dd>後述/Fxy及び/Iオプション指定の効果を特定の装置に限定します。0が最初の装置になります。</dd>
+   <dt>/I</dt>
+    <dd>装置を無視します(ドライブ文字を割り当てません)</dd>
+   <dt>/Fxy</dt>
+    <dd>CD-DA / CD-XA / マルチセッション / UPCの扱いを強制します。先に/Uオプションがない場合は全装置に対して適用されます。
+        <dl>
+         <dt>/FC+</dt>
+          <dd>&quot;CD-DA読み取り可能&quot;フラグを強制的にオンにします。</dd>
+         <dt>/FCS</dt>
+          <dd>CD-DA読み取り機能を強制的にSony CDU-561互換にします。<sup>*</sup></dd>
+         <dt>/FCT</dt>
+          <dd>CD-DA読み取り機能を強制的にToshiba XM-3401互換にします。<sup>*</sup></dd>
+         <dt>/FC </dt>
+          <dd>/FC+ /FCSと同じです。</dd>
+         <dt>/FX+</dt>
+          <dd>&quot;CD-XA読み取り可能&quot;フラグを強制的にオンにします。</dd>
+         <dt>/FXT</dt>
+          <dd>CD-XA読み取り機能を強制的にToshiba XM-3401互換にします。<sup>*</sup></dd>
+         <dt>/FXS</dt>
+          <dd>CD-XA読み取り機能を強制的にSony CDU-561互換にします。<sup>*</sup></dd>
+         <dt>/FXN</dt>
+          <dd>CD-XA読み取り機能を強制的にNEC 84-1互換にします。<sup>*</sup></dd>
+         <dt>/FX </dt>
+          <dd>/FX+ /FXSと同じです。</dd>
+         <dt>/FM+</dt>
+          <dd>&quot;マルチセッション対応&quot;フラグを強制的にオンにします。</dd>
+         <dt>/FMT</dt>
+          <dd>マルチセッション対応機能を強制的にToshiba XM-3401互換にします。<sup>*</sup></dd>
+         <dt>/FMS</dt>
+          <dd>マルチセッション対応機能を強制的にSony CDU-561互換にします。<sup>*</sup></dd>
+         <dt>/FMC</dt>
+          <dd>マルチセッション対応機能を強制的にChinon CDS-535互換にします。<sup>*</sup></dd>
+         <dt>/FMN</dt>
+          <dd>マルチセッション対応機能を強制的にNEC 84-1互換にします。<sup>*</sup></dd>
+         <dt>/FMH</dt>
+          <dd>マルチセッション対応機能を強制的にHP C4324互換にします。<sup>*</sup></dd>
+         <dt>/FMX</dt>
+          <dd>マルチセッション対応機能を強制的にNEC 46x互換にします。<sup>*</sup></dd>
+         <dt>/FM</dt>
+          <dd>/FM+ /FMSと同じです。</dd>
+         <dt>/FUU</dt>
+          <dd>強制的に&quot;UPC読み取り可能&quot;とし、アンパックraw UPCフォーマットであるとします。<sup>*</sup></dd>
+         <dt>/FUP</dt>
+          <dd>強制的に&quot;UPC読み取り可能&quot;とし、パックraw UPCフォーマットであるとします。<sup>*</sup></dd>
+         <dt>/FUA</dt>
+          <dd>強制的に&quot;UPC読み取り可能&quot;とし、ASCII raw UPCフォーマットであるとします。<sup>*</sup></dd>
+         <dt>/FU</dt>
+          <dd>/FUAと同じです。</dd>
+         <dt>/F</dt>
+          <dd>/FC+ /FCS /FX+ /FXS /FM+ /FMSと同じです。</dd>
+        </dl>
+        <sup>*</sup> SCSI-3/MMC / ATAPIドライブは自動的に各種機能を認識・構成が可能であるため、これらのオプションはそのドライブに対しては全て無視されます。</dd>
+  </dl>
+  <hr>
+
+  <h3>2.3.4. <a name="2.3.4">起動時表示について</a></h3>
+
+  <table border="1"><tbody><tr><td>
+<pre>IBM OS/2 JJSCDROM.DMD (DDK_020517) (JJ20030328)
+ui : di-ai-un-lu : vendor   product          rev  : da xa ms up
+00 : 01-01-01-00 : TEAC     CD-W216E         1.0A : +* +* +* +A
+01 : 02-00-03-00 : TEAC     CD-ROM CD-532S   3.0A : +S +S +S --
+02 : 02-00-05-00 : RICOH    MP6200S          2.40 : +* +* +* +A
+^^   ^^ ^^ ^^ ^^   ^^^^^^^^ ^^^^^^^^^^^^^^^^ ^^^^   ^^ ^^ ^^ ^^
+|    |  |  |  |    |        |                |      || || || ||
+a    b  c  d  e    f        g                h      ij kl mn op</pre>
+  </td></tr></tbody></table>
+  <dl>
+   <dt>a</dt>
+    <dd>CD-ROM装置番号(/Uオプション指定で使用する)</dd>
+   <dt>b</dt>
+    <dd>インストールされているアダプターデバイスドライバー番号</dd>
+   <dt>c</dt>
+    <dd>各アダプターデバイスドライバー配下のアダプター番号</dd>
+   <dt>d</dt>
+    <dd>各アダプター配下の接続されている物理装置番号</dd>
+   <dt>e</dt>
+    <dd>各物理装置配下の論理装置番号</dd>
+   <dt>f, g, h</dt>
+    <dd>デバイス問い合わせ文字列</dd>
+   <dt>i</dt>
+    <dd>&quot;CD-DA読み取り可能&quot;フラグがオンになっていれば'+'</dd>
+   <dt>j</dt>
+    <dd>強制されているCD-DA読み取り機能[S/T]、強制されていなければ'-'<br>
+        自動構成可能なSCSI-3/MMC / ATAPIドライブであれば'*'</dd>
+   <dt>k</dt>
+    <dd>&quot;CD-XA読み取り可能&quot;フラグがオンになっていれば'+'</dd>
+   <dt>l</dt>
+    <dd>強制されているCD-XA読み取り機能[T/S/N]、強制されていなければ'-'<br>
+        自動構成可能なSCSI-3/MMC / ATAPIドライブであれば'*'</dd>
+   <dt>m</dt>
+    <dd>&quot;マルチセッション対応&quot;フラグがオンになっていれば'+'</dd>
+   <dt>n</dt>
+    <dd>強制されているマルチセッション対応機能[T/S/C/N/H/X]、強制されていなければ'-'<br>
+        自動構成可能なSCSI-3/MMC / ATAPIドライブであれば'*'</dd>
+   <dt>o</dt>
+    <dd>&quot;UPC読み取り可能&quot;とされていれば'+'</dd>
+   <dt>p</dt>
+    <dd>読み取り可能なraw UPCフォーマット[U/P/A]、UPC読み取り可能でなければ'-'<br>
+        SCSI-3/MMC / ATAPIドライブの場合、UPC読み取り可能であれば常に'A'</dd>
+  </dl>
+  <hr>
+
+  <hr>
+
+  <h1>3. <a name="3">追加・修正されたIOCtl機能</a></h1>
+  <hr>
+
+  <h2>3.1. <a name="3.1"><tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_FEATURE_CTRL</tt></a></h2>
+  <dl>
+   <dt><strong>カテゴリ :</strong></dt>
+    <dd><tt>IOCTL_CDROMDISK</tt> (80h)</dd>
+   <dt><strong>機能 :</strong></dt>
+    <dd><tt>CDROMDISK_FEATURE_CTRL</tt> (4ah)</dd>
+   <dt><strong>説明 :</strong></dt>
+    <dd>JJSCDROM拡張機能フラグの設定</dd>
+   <dt><strong>パラメーターパケットフォーマット :</strong></dt>
+    <dd><tt>struct FeatureCtrl_Parm</tt>へのポインター。
+        <table border="1"><tbody><tr><td>
+<pre>struct FeatureCtrl_Parm {
+   ULONG    ID_code;  // 'CD01'
+   USHORT   flags;    // flags, see below
+};
+&nbsp;
+/* flags for FeatureCtrl_Parm */
+#define FEATURECTRL_DISABLEMS  0x0001
+  // disables multisession handling (restricts only 1st session TOC; CDS200 spoiler)
+#define FEATURECTRL_FIXTRK1NEG 0x0002
+  // fixes track 1 negative start LBA (to zero; CDS200 spoiler)</pre>
+        </td></tr></tbody></table></dd>
+   <dt><strong>データパケットフォーマット :</strong></dt>
+    <dd>不要。<tt>NULL</tt>とするのが望ましい。</dd>
+   <dt><strong>戻り値 :</strong></dt>
+    <dd><dl>
+         <dt><tt>NO_ERROR</tt></dt>
+          <dd>正常終了。</dd>
+         <dt><tt>ERROR_I24_INVALID_PARAMETER</tt></dt>
+          <dd>パラメーターが不正(<tt>ID_code</tt>または<tt>flags</tt>値が不正)。</dd>
+         <dt><tt>ERROR_I24_BAD_COMMAND</tt></dt>
+          <dd>サポートされていない機能。</dd>
+        </dl></dd>
+   <dt><strong>注釈 :</strong></dt>
+    <dd>JJSCDROM拡張機能フラグを設定します。
+        <dl>
+         <dt><tt>FEATURECTRL_DISABLEMS</tt> (0x0001)</dt>
+          <dd>当ビットがセットされると、そのドライブに対するマルチセッション動作を無効化します。リセットされると、マルチセッション動作を復旧させます。既定設定ではリセットされています(無効化なし、マルチセッション動作有効)。<br>
+              マルチセッション動作を無効にするとCD-Extraデータ部やMidbar CDS-200の腐った第二セッションTOC情報を隠すことができるので、オーディオ/データ混在の最終CD-ExtraトラックをCD-DA操作で扱う際に役立ちます。</dd>
+         <dt><tt>FEATURECTRL_FIXTRK1NEG</tt> (0x0002)</dt>
+          <dd>当ビットがセットされると、トラック1の開始LBAアドレスが負の値であった場合に0に修正します。リセットされると、修正は行われません。既定設定ではリセットされています(修正なし)。<br>
+              Midbar CDS-200ディスクのような、CD-DA規格違反のTOC情報を持つメディアを扱う際に役立ちます。</dd>
+        </dl>
+        フラグが変更された際にドライブ内にメディアがあれば、自動的に再マウントされます。また<tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_RESETDRIVE</tt>を発行した際には全フラグを既定設定に戻します。</dd>
+  </dl>
+  <hr>
+
+  <h2>3.2. <a name="3.2"><tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_DEVICESTATUS</tt></a></h2>
+  <dl>
+   <dt><strong>カテゴリ :</strong></dt>
+    <dd><tt>IOCTL_CDROMDISK</tt> (80h)</dd>
+   <dt><strong>機能 :</strong></dt>
+    <dd><tt>CDROMDISK_DEVICESTATUS</tt> (60h)</dd>
+   <dt><strong>説明 :</strong></dt>
+    <dd>ドライブ状況の取得</dd>
+   <dt><strong>パラメーターパケットフォーマット :</strong></dt>
+    <dd>(変更なし)</dd>
+   <dt><strong>データパケットフォーマット :</strong></dt>
+    <dd>(変更なし)</dd>
+   <dt><strong>戻り値 :</strong></dt>
+    <dd>(変更なし)</dd>
+   <dt><strong>注釈 :</strong></dt>
+    <dd>新規に3状況ビットが追加されています :
+        <dl>
+         <dt>ビット29</dt>
+          <dd>セットされていれば、そのドライブはマルチセッション動作が可能です。</dd>
+         <dt>ビット28</dt>
+          <dd>セットされていれば、そのドライブのマルチセッション動作は現在無効化されています。</dd>
+         <dt>ビット27</dt>
+          <dd>セットされていれば、そのドライブの'負のトラック1開始LBA修正'機能は現在有効になっています。</dd>
+        </dl></dd>
+  </dl>
+  <hr>
+
+  <h2>3.3. <a name="3.3"><tt>IOCTL_CDROMDISK2</tt> - <tt>CDROMDISK2_FEATURES</tt></a></h2>
+  <dl>
+   <dt><strong>カテゴリ :</strong></dt>
+    <dd><tt>IOCTL_CDROMDISK2</tt> (82h)</dd>
+   <dt><strong>機能 :</strong></dt>
+    <dd><tt>CDROMDISK2_FEATURES</tt> (63h)</dd>
+   <dt><strong>説明 :</strong></dt>
+    <dd>DM機能情報を戻す</dd>
+   <dt><strong>パラメーターパケットフォーマット :</strong></dt>
+    <dd>(変更なし)</dd>
+   <dt><strong>データパケットフォーマット :</strong></dt>
+    <dd>(変更なし)</dd>
+   <dt><strong>戻り値 :</strong></dt>
+    <dd>(変更なし)</dd>
+   <dt><strong>注釈 :</strong></dt>
+    <dd>新規に2機能フラグビットが追加されています :
+        <dl>
+         <dt><tt>FEATURE_MSCTRL_SUPPORT</tt> (0x00008000)</dt>
+          <dd>セットされていれば、ドライバーはIOCtl <tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_FEATURE_CTRL</tt>、JJSCDROM拡張機能<tt>FEATURECTRL_DISABLEMS</tt>フラグ、並びにドライブ状況ビット28-29をサポートします。</dd>
+         <dt><tt>FEATURE_TRK1NEGFIX_SUPPORT</tt> (0x00004000)</dt>
+          <dd><tt>FEATURE_MSCTRL_SUPPORT</tt>に加えてセットされていれば、ドライバーはJJSCDROM拡張機能<tt>FEATURECTRL_FIXTRK1NEG</tt>フラグ、並びにドライブ状況ビット27をサポートします。</dd>
+        </dl></dd>
+  </dl>
+  <hr>
+
+  <hr>
+
+  <h1>4. <a name="4">クレジット</a></h1>
+  <dl>
+   <dt><strong>開発</strong></dt>
+    <dl>
+     <dt><strong>修正プログラミング</strong></dt>
+      <dd>Takayuki 'January June' Suwa / Beliefia Productions</dd>
+    </dl>
+    <dl>
+     <dt><strong>文書</strong></dt>
+      <dd>Takayuki 'January June' Suwa / Beliefia Productions</dd>
+    </dl>
+   <dt><strong>謝辞</strong> (順不同・敬称略)</dt>
+    <dl>
+     <dt><strong>Atsushi Nishio</strong> ('The Netscape Communicator 4.61 for OS/2 Team - Extended Development Team'の一員でもありますね <a href="about:authors"><tt>:)</tt></a>)</dt>
+      <dd>CD-DA読み取り能力の修正を行った先駆者です。CD-DA読み取り / マルチセッション能力の有効化、及びWORMスタイルの旧式CD-Rドライブの取り扱いについて参考にさせて頂きました。</dd>
+     <dt><strong>Robert Lalla</strong></dt>
+      <dd>CD-Extraサポートコードを提供して下さいました。多くのOS/2ユーザーが彼の英断を讃えていることでしょう。</dd>
+     <dt><strong>Sant Coetzer</strong></dt>
+      <dd>本文書(英語版)の校正をして下さいました。拙い英語でどうもすみません。</dd>
+    </dl>
+  </dl>
+  <hr>
+
+  <hr>
+
+  Modification copyright (c) 1999-2003 Takayuki 'January June' Suwa / Beliefia Productions. All rights reserved.<br>
+  Modification copyright (c) 2000 Robert Lalla. All rights reserved.<br>
+  Beliefia Productions and its logo design are trademarks of Beliefia Productions. All rights reserved.<br>
+  Other copyrighted works (images, musics, programs, and so on), trademarks and servicemarks in this document are owned by their respective owners.<br>
+  <br>
+  [This document is HTML3.2(Wilbur)-compliant.]
+
+ </body>
+
+</html>

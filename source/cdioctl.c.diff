@@ -1,0 +1,24 @@
+157a158,163
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>      {IOCD_FEATURE_CTRL,  CD_FeatureCtrl,                                                                                      // JJ20030312
+>                           sizeof(struct FeatureCtrl_Parm),                                                                     // JJ20030312
+>                           0,TRUE},                                                                                             // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+644a651,653
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pDataPkt->DeviceAttr = DP_DEVICEATTR_CHANGELINE;                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+645a655
+> #endif                                                                                                                         // JJ20030312
+649a660,661
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+651a664
+> #endif                                                                                                                         // JJ20030312
+787a801,803
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    if (IS_INTERFACE_MMC(pUnitCB))                                                                                              // JJ20030312
+> #else                                                                                                                          // JJ20030312
+788a805
+> #endif                                                                                                                         // JJ20030312

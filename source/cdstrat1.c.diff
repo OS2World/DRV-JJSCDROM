@@ -1,0 +1,323 @@
+100a101,103
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+218a222,224
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+409a416,417
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+410a419
+> #endif                                                                                                                         // JJ20030312
+473a483,484
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+474a486
+> #endif                                                                                                                         // JJ20030312
+488a501,505
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>    if(pUnitCB->DeviceInfo.interface_type == INTERFACE_SCSI &&                                                                  // JJ20030312
+>       (pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_FORCECDXA_MASK) == DCAPS_FORCECDXA_TOSHIBA)                              // JJ20030312
+>       goto force_toshiba;                                                                                                      // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+492a510,512
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> force_toshiba:                                                                                                                 // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+500a521,523
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>          if (!IS_INTERFACE_MMC(pUnitCB))                                                                                       // JJ20030312
+> #else                                                                                                                          // JJ20030312
+501a525
+> #endif                                                                                                                         // JJ20030312
+506a531,533
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>            !IS_INTERFACE_MMC(pUnitCB) )                                                                                        // JJ20030312
+> #else                                                                                                                          // JJ20030312
+507a535
+> #endif                                                                                                                         // JJ20030312
+522a551,555
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>    if ( (pUnitCB->DeviceInfo.product_id_code == SONY_561 ||                                                                    // JJ20030312
+>          (pUnitCB->DeviceInfo.interface_type == INTERFACE_SCSI &&                                                              // JJ20030312
+>           (pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_FORCECDXA_MASK) == DCAPS_FORCECDXA_SONY) ) &&                        // JJ20030312
+> #else                                                                                                                          // JJ20030312
+523a557
+> #endif                                                                                                                         // JJ20030312
+533a568,571
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>         (pUnitCB->DeviceInfo.vendor_id_code == NEC ||                                                                          // JJ20030312
+>          (pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_FORCECDXA_MASK) == DCAPS_FORCECDXA_NEC) &&                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+534a573
+> #endif                                                                                                                         // JJ20030312
+570a610,615
+> #ifdef JJSMODS_CDEXTRA                                                                                                         // JJ20030312
+>       ULONG tmp_sec_no = PRIMARY_VOL_DESCR_RBA;                                                                                // JJ20030312 (rl_CD-Extra)
+>       if ((pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_MULTISESSION) &&                                                     // JJ20030312 (rl_CD-Extra)
+>           (pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_MULTISESSION_MOUNTED))                                               // JJ20030312 (rl_CD-Extra)
+>          { tmp_sec_no += pUnitCB->DeviceInfo.last_session_addr; }                                                              // JJ20030312 (rl_CD-Extra)
+> #endif                                                                                                                         // JJ20030312
+572a618,620
+> #ifdef JJSMODS_CDEXTRA                                                                                                         // JJ20030312
+>                                    tmp_sec_no,                                                                                 // JJ20030312 (rl_CD-Extra)
+> #else                                                                                                                          // JJ20030312
+573a622
+> #endif                                                                                                                         // JJ20030312
+584a634,635
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+585a637
+> #endif                                                                                                                         // JJ20030312
+588a641,643
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>          f_ZeroCB ((PBYTE)pBuff, 2048);                                                                                        // JJ20030312
+> #else                                                                                                                          // JJ20030312
+593a649
+> #endif                                                                                                                         // JJ20030312
+675a732,734
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    pUnitCB->Flags &= ~(UCF_UNCERTAIN_MEDIA|UCF_PACKET_WRITABLE);                                                               // JJ20030312
+> #else                                                                                                                          // JJ20030312
+677a737
+> #endif                                                                                                                         // JJ20030312
+682a743,745
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    if (!IS_INTERFACE_MMC(pUnitCB))                                                                                             // JJ20030312
+> #else                                                                                                                          // JJ20030312
+683a747
+> #endif                                                                                                                         // JJ20030312
+949a1014,1015
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+950a1017
+> #endif                                                                                                                         // JJ20030312
+1007a1075,1076
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1008a1078
+> #endif                                                                                                                         // JJ20030312
+1018a1089,1091
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>         !IS_INTERFACE_MMC(pUnitCB) )                                                                                           // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1019a1093
+> #endif                                                                                                                         // JJ20030312
+1072a1147,1148
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1073a1150
+> #endif                                                                                                                         // JJ20030312
+1076a1154,1156
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>          f_ZeroCB ((PBYTE)pBuff, 2048);                                                                                        // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1080a1161
+> #endif                                                                                                                         // JJ20030312
+1119a1201,1202
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1120a1204
+> #endif                                                                                                                         // JJ20030312
+1177a1262,1263
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1178a1265
+> #endif                                                                                                                         // JJ20030312
+1187a1275,1277
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>         !IS_INTERFACE_MMC(pUnitCB) )                                                                                           // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1188a1279
+> #endif                                                                                                                         // JJ20030312
+1240a1332,1333
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1241a1335
+> #endif                                                                                                                         // JJ20030312
+1244a1339,1341
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>          f_ZeroCB ((PBYTE)pBuff, 2048);                                                                                        // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1248a1346
+> #endif                                                                                                                         // JJ20030312
+1700a1799,1809
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+>                      pUnitCB->PacketInfo.buf_info[n].flags &= ~(PAC_UNSAVED|PAC_ALLOCATED);                                    // JJ20030326
+>                      rc = ReadPacket (pUnitCB, start_LBA, packet_size,                                                         // JJ20030326
+>                                       pUnitCB->PacketInfo.buf_info[n].adr_buf,                                                 // JJ20030326
+>                                       block_length);                                                                           // JJ20030326
+>                      if (rc == STDON)                                                                                          // JJ20030326
+>                      {                                                                                                         // JJ20030326
+>                         pUnitCB->PacketInfo.buf_info[n].flags |= PAC_ALLOCATED;                                                // JJ20030326
+>                         pUnitCB->PacketInfo.buf_info[n].LBA = start_LBA;                                                       // JJ20030326
+>                      }                                                                                                         // JJ20030326
+> #else                                                                                                                          // JJ20030326
+1711a1821
+> #endif                                                                                                                         // JJ20030326
+1834a1945,1947
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>       if (!IS_INTERFACE_MMC(pUnitCB))                                                                                          // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1835a1949
+> #endif                                                                                                                         // JJ20030312
+1892a2007,2017
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+>                         pUnitCB->PacketInfo.buf_info[n].flags &= ~(PAC_UNSAVED|PAC_ALLOCATED);                                 // JJ20030326
+>                         rc = ReadPacket (pUnitCB, start_LBA, packet_size,                                                      // JJ20030326
+>                                          pUnitCB->PacketInfo.buf_info[n].adr_buf,                                              // JJ20030326
+>                                          block_length);                                                                        // JJ20030326
+>                         if (rc == STDON)                                                                                       // JJ20030326
+>                         {                                                                                                      // JJ20030326
+>                            pUnitCB->PacketInfo.buf_info[n].flags |= PAC_ALLOCATED;                                             // JJ20030326
+>                            pUnitCB->PacketInfo.buf_info[n].LBA = start_LBA;                                                    // JJ20030326
+>                         }                                                                                                      // JJ20030326
+> #else                                                                                                                          // JJ20030326
+1901a2027
+> #endif                                                                                                                         // JJ20030326
+2157a2284,2287
+> #ifdef JJSMODS_CDEXTRA                                                                                                         // JJ20030312
+>    USHORT rc, mode_flag;                                                                                                       // JJ20030312 (rl_CD-Extra)
+>    ULONG session_addr, n;                                                                                                      // JJ20030312 (rl_CD-Extra)
+> #else                                                                                                                          // JJ20030312
+2159a2290
+> #endif                                                                                                                         // JJ20030312
+2170a2302,2324
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    if(pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_MULTISESSION_DISABLED)                                                    // JJ20030312
+>       return (STDON);                                                                                                          // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>    if(pUnitCB->DeviceInfo.interface_type == INTERFACE_SCSI)                                                                    // JJ20030312
+>       switch(pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_FORCEMULTISESSION_MASK)                                            // JJ20030312
+>       {                                                                                                                        // JJ20030312
+>          case DCAPS_FORCEMULTISESSION_TOSHIBA:                                                                                 // JJ20030312
+>             goto force_toshiba;                                                                                                // JJ20030312
+>          case DCAPS_FORCEMULTISESSION_SONY:                                                                                    // JJ20030312
+>             goto force_sony;                                                                                                   // JJ20030312
+>          case DCAPS_FORCEMULTISESSION_CHINON:                                                                                  // JJ20030312
+>             goto force_chinon;                                                                                                 // JJ20030312
+>          case DCAPS_FORCEMULTISESSION_NEC:                                                                                     // JJ20030312
+>             goto force_nec;                                                                                                    // JJ20030312
+>          case DCAPS_FORCEMULTISESSION_HP:                                                                                      // JJ20030312
+>             goto force_hp;                                                                                                     // JJ20030312
+>          case DCAPS_FORCEMULTISESSION_NEC46X:                                                                                  // JJ20030312
+>             goto force_nec46x;                                                                                                 // JJ20030312
+>       }                                                                                                                        // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+2173a2328,2330
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> force_toshiba:                                                                                                                 // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+2182a2340,2342
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> force_sony:                                                                                                                    // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+2186a2347,2349
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> force_chinon:                                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+2190a2354,2356
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> force_nec:                                                                                                                     // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+2194a2361,2363
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> force_nec46x:                                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+2198a2368,2370
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> force_hp:                                                                                                                      // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+2204a2377,2379
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>       else if (IS_INTERFACE_MMC(pUnitCB))                                                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2205a2381
+> #endif                                                                                                                         // JJ20030312
+2216a2393,2398
+> #ifdef JJSMODS_CDEXTRA                                                                                                         // JJ20030312
+>       for (n = session_addr+PRIMARY_VOL_DESCR_RBA; term_found != TRUE; n++)                                                    // JJ20030312 (rl_CD-Extra)
+>       {                                                                                                                        // JJ20030312 (rl_CD-Extra)
+>          if (n > (session_addr+512)) break; /* limit search range to 1MB */                                                    // JJ20030312 (rl_CD-Extra)
+>          if ((rc = ReadSector(pUnitCB, (ULONG) n, 1, physaddr, 2048)) != STDON)                                                // JJ20030312 (rl_CD-Extra)
+> #else                                                                                                                          // JJ20030312
+2219a2402
+> #endif                                                                                                                         // JJ20030312
+2229a2413,2416
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>          if ( ((PUSHORT)(pBuffer+1))[0] != ((USHORT)'C' << 0) + ((USHORT)'D' << 8) ||                                          // JJ20030328
+>               ((PUSHORT)(pBuffer+1))[1] != ((USHORT)'0' << 0) + ((USHORT)'0' << 8) ||                                          // JJ20030328
+> #else                                                                                                                          // JJ20030312
+2231a2419
+> #endif                                                                                                                         // JJ20030312
+2243a2432,2434
+> #ifdef JJSMODS_CDEXTRA                                                                                                         // JJ20030312
+>             pUnitCB->DeviceInfo.volume_descr_terminator = n - session_addr;                                                    // JJ20030312 (rl_CD-Extra)
+> #else                                                                                                                          // JJ20030312
+2244a2436
+> #endif                                                                                                                         // JJ20030312
+2250a2443,2445
+> #ifdef JJSMODS_CDEXTRA                                                                                                         // JJ20030312
+>       rc=ReadSector (pUnitCB, session_addr, 1, physaddr, 2048);                                                                // JJ20030312 (rl_CD-Extra)
+> #else                                                                                                                          // JJ20030312
+2251a2447
+> #endif                                                                                                                         // JJ20030312
+2324a2521,2523
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030328
+>          *session_addr = RedBookToHSG (last_session.dword);                                                                    // JJ20030328
+> #else                                                                                                                          // JJ20030328
+2327a2527
+> #endif                                                                                                                         // JJ20030328
+2592a2793,2795
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    USHORT   rc=STDON;                                                                                                          // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2593a2797
+> #endif                                                                                                                         // JJ20030312
+2598a2803,2804
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2599a2806
+> #endif                                                                                                                         // JJ20030312
+2606a2814,2815
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2607a2817
+> #endif                                                                                                                         // JJ20030312
+2610a2821,2823
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    f_BlockCopy ((PBYTE)dst, (PBYTE)src, count);                                                                                // JJ20030312
+> #else                                                                                                                          // JJ20030312
+2612a2826
+> #endif                                                                                                                         // JJ20030312
+2769a2984,2988
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+>          if (pUnitCB->PacketInfo.buf_info[i].flags & PAC_EXIST &&                                                              // JJ20030326
+>              !(DevHelp_FreePhys (pUnitCB->PacketInfo.buf_info[i].adr_buf)))                                                    // JJ20030326
+>             pUnitCB->PacketInfo.buf_info[i].flags &= ~PAC_EXIST;                                                               // JJ20030326
+> #endif                                                                                                                         // JJ20030326
+3227a3447,3449
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+3264a3487,3489
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>       if (Status == STDON && (VOID FAR *)pRP->DataPacket != NULL)                                                              // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3265a3491
+> #endif                                                                                                                         // JJ20030312
+3277a3504,3507
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>              FEATURE_USB_SUPPORT | FEATURE_CDRW_SUPPORT | FEATURE_EXECMD_SUPPORT |                                             // JJ20030312
+>              FEATURE_MSCTRL_SUPPORT | FEATURE_TRK1NEGFIX_SUPPORT;                                                              // JJ20030312
+> #else                                                                                                                          // JJ20030312
+3278a3509
+> #endif                                                                                                                         // JJ20030312
+3313a3545,3547
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312

@@ -1,0 +1,16 @@
+89a90,91
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+> #else                                                                                                                          // JJ20030326
+90a93
+> #endif                                                                                                                         // JJ20030326
+120a124,126
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+>             *session_addr = RedBookToHSG (ul_LBA.dword) + 150;                                                                 // JJ20030326
+> #else                                                                                                                          // JJ20030326
+123a130
+> #endif                                                                                                                         // JJ20030326
+197a205,206
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+> #else                                                                                                                          // JJ20030326
+201a211
+> #endif                                                                                                                         // JJ20030326

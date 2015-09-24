@@ -1,0 +1,4 @@
+50a51,53
+> #ifdef JJSMODS_RESOURCEMANAGER                                                                                                 // JJ20030312
+> #include "rmcalls.h"                                                                                                           // JJ20030312
+> #endif                                                                                                                         // JJ20030312

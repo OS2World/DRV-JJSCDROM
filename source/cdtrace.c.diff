@@ -1,0 +1,8 @@
+76a77,79
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+91a95,97
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312

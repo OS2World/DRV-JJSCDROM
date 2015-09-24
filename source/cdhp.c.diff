@@ -1,0 +1,6 @@
+129a130,132
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+>          *session_addr = RedBookToHSG (last_session.dword);                                                                    // JJ20030326
+> #else                                                                                                                          // JJ20030326
+132a136
+> #endif                                                                                                                         // JJ20030326

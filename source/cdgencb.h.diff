@@ -1,0 +1,40 @@
+170a171,194
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> #define DCAPS_SCSI3_MMC                  0x00080000L                                                                           // JJ20030312
+> #define DCAPS_MULTISESSION_DISABLED      0x00100000L                                                                           // JJ20030312
+> #define DCAPS_TRACK1NEGATIVE_FIXED       0x00200000L                                                                           // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> #define DCAPS_FORCECDDA_MASK             0x06000000L                                                                           // JJ20030312
+> #define DCAPS_FORCECDDA_DEFAULT          0x00000000L                                                                           // JJ20030312
+> #define DCAPS_FORCECDDA_SONY             0x02000000L                                                                           // JJ20030312
+> #define DCAPS_FORCECDDA_TOSHIBA          0x04000000L                                                                           // JJ20030312
+> #define DCAPS_FORCECDXA_MASK             0x18000000L                                                                           // JJ20030312
+> #define DCAPS_FORCECDXA_DEFAULT          0x00000000L                                                                           // JJ20030312
+> #define DCAPS_FORCECDXA_TOSHIBA          0x08000000L                                                                           // JJ20030312
+> #define DCAPS_FORCECDXA_SONY             0x10000000L                                                                           // JJ20030312
+> #define DCAPS_FORCECDXA_NEC              0x18000000L                                                                           // JJ20030312
+> #define DCAPS_FORCEMULTISESSION_MASK     0xe0000000L                                                                           // JJ20030312
+> #define DCAPS_FORCEMULTISESSION_DEFAULT  0x00000000L                                                                           // JJ20030312
+> #define DCAPS_FORCEMULTISESSION_TOSHIBA  0x20000000L                                                                           // JJ20030312
+> #define DCAPS_FORCEMULTISESSION_SONY     0x40000000L                                                                           // JJ20030312
+> #define DCAPS_FORCEMULTISESSION_CHINON   0x60000000L                                                                           // JJ20030312
+> #define DCAPS_FORCEMULTISESSION_NEC      0x80000000L                                                                           // JJ20030312
+> #define DCAPS_FORCEMULTISESSION_HP       0xa0000000L                                                                           // JJ20030312
+> #define DCAPS_FORCEMULTISESSION_NEC46X   0xc0000000L                                                                           // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+254a279,281
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+> #define  NUM_OF_BUFFERS       16                                                                                               // JJ20030326
+> #else                                                                                                                          // JJ20030326
+255a283
+> #endif                                                                                                                         // JJ20030326
+258a287,292
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030326
+>   UCHAR       flags;                                                                                                           // JJ20030326
+>   UCHAR       access_order;                                                                                                    // JJ20030326
+>   ULONG       LBA;                                                                                                             // JJ20030326
+>   ULONG       adr_buf;                                                                                                         // JJ20030326
+> #else                                                                                                                          // JJ20030326
+262a297
+> #endif                                                                                                                         // JJ20030326

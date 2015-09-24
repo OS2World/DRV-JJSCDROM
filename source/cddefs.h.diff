@@ -1,0 +1,15 @@
+124a125,130
+> #ifdef JJSMODS_VERBOSEPAUSE                                                                                                    // JJ20030312
+> #define CDF_VERBOSEPAUSE        0x00000040    /* verbose w/pause          */                                                   // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> #ifdef JJSMODS_WORM2CDROM                                                                                                      // JJ20030312
+> #define CDF_WORM2CDROM          0x00000080    /* WORM devices as CD-ROM   */                                                   // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+160a167,173
+> 
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> #define IS_INTERFACE_MMC(pUnitCB) \
+>    ((pUnitCB)->DeviceInfo.interface_type == INTERFACE_ATAPI || \
+>     (pUnitCB)->DeviceInfo.interface_type == INTERFACE_SCSI && \
+>     (pUnitCB)->DeviceInfo.Audio.capabilities & DCAPS_SCSI3_MMC)
+> #endif                                                                                                                         // JJ20030312

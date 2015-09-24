@@ -1,0 +1,57 @@
+5c5
+< #/* Driver Name: OS2CDROM.DMD - OS/2 CD-ROM Device Manager              */
+---
+> #/* Driver Name: JJSCDROM.DMD - OS/2 CD-ROM Device Manager              */
+45c45
+< #                        os2cdrom.dmd -> create PS/2 386 RETAIL driver
+---
+> #                        jjscdrom.dmd -> create PS/2 386 RETAIL driver
+47c47
+< #            default:  create os2cdrom.dmd
+---
+> #            default:  create jjscdrom.dmd
+76a77,85
+> JJSMODS = \
+>           -DJJSMODS_BASE \
+>           -DJJSMODS_RESOURCEMANAGER \
+>           -DJJSMODS_VERBOSEPAUSE \
+>           -DJJSMODS_WORM2CDROM \
+>           -DJJSMODS_CDEXTRA \
+>           -DJJSMODS_ENFORCEMENTS \
+>           -DJJSMODS_SCSI3MMC \
+> 
+128,130c137,138
+< #CFLAGS = /c /Fc /Zp /G2s /Answ /NT StaticCode $(ENV)
+< CFLAGS = /c /Zp /G2s /Answ /W3 /DDEBUGo /Fc /nologo $(ENV)
+< LFLAGS = /map /nod /exepack /packd /a:16 /far
+---
+> CFLAGS = /c /Zp /G2s /Answ /W3 /DDEBUGo /Fc /nologo $(ENV) $(JJSMODS) /Oegilns
+> LFLAGS = /map /nod /exepack /packc /packd /a:16 /far
+133,134c141
+< #LIBS  =  $(DHLIB)\dhcalls.lib libh.lib
+< LIBS  =  $(DHLIB)\dhcalls.lib
+---
+> LIBS  =  $(DHLIB)\dhcalls.lib $(LIB)\rmcalls.lib
+152c159,160
+<         ..\..\libobj\anulrem.obj
+---
+>         ..\..\libobj\anulrem.obj \
+>         ..\..\libobj\anlshl.obj source\anulshr.obj
+221c229
+< all:    os2cdrom.dmd
+---
+> all:    jjscdrom.dmd
+253c261
+< os2cdrom.dmd:  $(OBJS) $(LIBS)  makefile
+---
+> jjscdrom.dmd:  $(OBJS) $(LIBS)  makefile
+255c263
+< LIBRARY OS2CDROM
+---
+> LIBRARY JJSCDROM
+257c265
+< DESCRIPTION "$(FILEVER)  Device Manager Driver for CDROM"
+---
+> DESCRIPTION "@#JJSuwa:2003.0328#@##1##Fri Mar 28 01:40:10 2003 serina::::0::@@ Device Manager Driver for CD-ROM/CD-RW/DVDs, based on DDK_020517"
+266a275
+>  RMCode         CLASS 'CODE' IOPL

@@ -1,0 +1,137 @@
+52a53,108
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> /****************************************************************************                                                  // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * FUNCTION NAME = Adjust_ModeSense10Result                                                                                    // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * DESCRIPTION   = Adjust MODE SENSE(10) results for legacy SCSI-3 specification                                               // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  *          Remove a obsoleted 8-byte SCSI-3 BlockDescriptor in all successive                                                 // JJ20030312
+>  *          MODE SENSE(10) results if exists                                                                                   // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  *          VOID Adjust_ModeSense10Result  (NPIORB_CDB pIORB)                                                                  // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * INPUT         = pIORB          - Pointer to IORB-CDB                                                                        // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * OUTPUT        = VOID                                                                                                        // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  * RETURN-NORMAL =                                                                                                             // JJ20030312
+>  * RETURN-ERROR  =                                                                                                             // JJ20030312
+>  *                                                                                                                             // JJ20030312
+>  ****************************************************************************/                                                 // JJ20030312
+>                                                                                                                                // JJ20030312
+> VOID Adjust_ModeSense10Result (NPIORB_CDB pIORB)                                                                               // JJ20030312
+> {                                                                                                                              // JJ20030312
+>    if( pIORB->apt.iorbh.CommandCode == IOCC_ADAPTER_PASSTHRU && // CDB ADAPTER PASSTHRU                                        // JJ20030312
+>        pIORB->apt.iorbh.CommandModifier == IOCM_EXECUTE_CDB &&                                                                 // JJ20030312
+>        pIORB->pad == 0 &&                                       // do adjust                                                   // JJ20030312
+>        ! (pIORB->apt.iorbh.Status & IORB_ERROR) )               // IORB successed                                              // JJ20030312
+>    {                                                                                                                           // JJ20030312
+>       struct CDB_ModeSense_10 NEAR * pCDB = (struct CDB_ModeSense_10 NEAR *) &(pIORB->CDB);                                    // JJ20030312
+>       if ( pCDB->OpCode == SCSI_MODE_SENSE_10 )  // MODE SENSE(10)                                                             // JJ20030312
+>       {                                                                                                                        // JJ20030312
+>          USHORT alloc_length = (USHORT)pCDB->alloc_length.usbytes.byte_0 * 256 + (USHORT)pCDB->alloc_length.usbytes.byte_1;    // JJ20030312
+>          if ( alloc_length > sizeof(struct ModeSenseHdr_10) )  // has page header                                              // JJ20030312
+>          {                                                                                                                     // JJ20030312
+>             struct ModeSenseParmList_10 NEAR * pCDBData = ( struct ModeSenseParmList_10 NEAR *) &(pIORB->CDB_data);            // JJ20030312
+>             USHORT desc_length = (USHORT)pCDBData->ModeSenseHdr.block_descriptor_len.usbytes.byte_0 * 256 +                    // JJ20030312
+>                                  (USHORT)pCDBData->ModeSenseHdr.block_descriptor_len.usbytes.byte_1;                           // JJ20030312
+>             if ( desc_length != 0 )                                                                                            // JJ20030312
+>             {                                                                                                                  // JJ20030312
+>                USHORT data_length = (USHORT)pCDBData->ModeSenseHdr.mode_data_length.usbytes.byte_0 * 256 +                     // JJ20030312
+>                                     (USHORT)pCDBData->ModeSenseHdr.mode_data_length.usbytes.byte_1 - desc_length;              // JJ20030312
+>                USHORT shift_length = alloc_length - sizeof(struct ModeSenseHdr_10) - desc_length;                              // JJ20030312
+>                if( (SHORT)shift_length > 0 )                                                                                   // JJ20030312
+>                   f_BlockCopy ((PBYTE)&pCDBData->Descriptors,                                                                  // JJ20030312
+>                                &((PBYTE)&pCDBData->Descriptors)[sizeof(struct BlockDescriptor)],                               // JJ20030312
+>                                shift_length);                                                                                  // JJ20030312
+>                pCDBData->ModeSenseHdr.block_descriptor_len.word = 0;                                                           // JJ20030312
+>                pCDBData->ModeSenseHdr.mode_data_length.usbytes.byte_0 = (UCHAR)(data_length >> 8);                             // JJ20030312
+>                pCDBData->ModeSenseHdr.mode_data_length.usbytes.byte_1 = (UCHAR)data_length;                                    // JJ20030312
+>             }                                                                                                                  // JJ20030312
+>          }                                                                                                                     // JJ20030312
+>       }                                                                                                                        // JJ20030312
+>    }                                                                                                                           // JJ20030312
+> }                                                                                                                              // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+73a130,132
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+108a168,170
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+129a192,194
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+171a237,239
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+226a295,297
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+293a365,367
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+317a392,394
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+326a404,405
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+329a409
+> #endif                                                                                                                         // JJ20030312
+333a414,416
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>       pUnitCB->Flags&=~(UCF_NEED_REINIT|UCF_GETCONF_NS);                                                                       // JJ20030312
+> #else                                                                                                                          // JJ20030312
+335a419
+> #endif                                                                                                                         // JJ20030312
+390a475,476
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+391a478,482
+> #endif                                                                                                                         // JJ20030312
+> 
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>    Adjust_ModeSense10Result((NPIORB_CDB)pIORB);  // Adjust MODE SENSE(10) results                                              // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+405a497,499
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+452a547,549
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+492a590,592
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+598a699,701
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+651a755,757
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+1012a1119,1120
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1018a1127
+> #endif                                                                                                                         // JJ20030312
+1027a1137,1140
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>       f_BlockCopy((PBYTE)(pCDTraceHead+4), (PBYTE)&pIORB->CDB, 12);                                                            // JJ20030312
+>       f_BlockCopy((PBYTE)(pCDTraceHead+16), (PBYTE)&pIORB->sense_data, 16);                                                    // JJ20030312
+> #else                                                                                                                          // JJ20030312
+1032a1146
+> #endif                                                                                                                         // JJ20030312

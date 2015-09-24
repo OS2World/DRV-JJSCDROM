@@ -1,0 +1,536 @@
+83a84,93
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+> USHORT UnitReadCDDAMode[MAX_DRIVE_LETTERS] = {0};                                                                              // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> static UCHAR HeaderIDMsg[] =                                                                                                   // JJ20030312
+> "\r\n"                                                                                                                         // JJ20030312
+> "\033[1mIBM OS/2 JJSCDROM.DMD (\033[32mDDK_020517\033[37m) (\033[36mJJ20030328\033[37m)\r\n"                                   // JJ20030328
+> "ui : di-ai-un-lu : vendor   product          rev  : da xa ms up\033[0m";                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+87a98
+> #endif                                                                                                                         // JJ20030312
+89a101,107
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> static UCHAR ProductIDMsg[] =                                                                                                  // JJ20030312
+>   "   :   -  -  -   :                                :            ";                                                           // JJ20030312
+> // aa : bb-cc-dd-ee : ffffffff gggggggggggggggg hhhh : ij kl mn op                                                             // JJ20030312
+> // 000000000011111111112222222222333333333344444444445555555555666                                                             // JJ20030312
+> // 012345678901234567890123456789012345678901234567890123456789012                                                             // JJ20030312
+> #else                                                                                                                          // JJ20030312
+91a110
+> #endif                                                                                                                         // JJ20030312
+104a124,176
+> #ifdef JJSMODS_RESOURCEMANAGER                                                                                                 // JJ20030312
+> ULONG RMFlags  = NULL;                                                                                                         // JJ20030312
+> PFNRM RM_Help0 = NULL;                                                                                                         // JJ20030312
+> PFNRM RM_Help3 = NULL;                                                                                                         // JJ20030312
+> HDRIVER hRMDriver = 0;                                                                                                         // JJ20030312
+> static UCHAR RMDriverName[] = "JJSCDROM.DMD";                                                                                  // JJ20030312
+> static UCHAR RMDriverDesc[] = "Modified CD-ROM / CD-RW / DVDs Device Manager";                                                 // JJ20030312
+> static UCHAR RMVendorName[] = "Takayuki 'January June' Suwa";                                                                  // JJ20030312
+> DRIVERSTRUCT xRMDriverStruct =                                                                                                 // JJ20030312
+> {                                                                                                                              // JJ20030312
+>    RMDriverName,                                                                                                               // JJ20030312
+>    RMDriverDesc,                                                                                                               // JJ20030312
+>    RMVendorName,                                                                                                               // JJ20030312
+>    CMVERSION_MAJOR,                                                                                                            // JJ20030312
+>    CMVERSION_MINOR,                                                                                                            // JJ20030312
+>    {2003,  3, 28},                                                                                                             // JJ20030328
+>    DRF_STATIC,                                                                                                                 // JJ20030312
+>    DRT_ADDDM,                                                                                                                  // JJ20030312
+>    DRS_DM,                                                                                                                     // JJ20030312
+>    NULL                                                                                                                        // JJ20030312
+> };                                                                                                                             // JJ20030312
+> static UCHAR RMSearchKeyIDE[] = "IDE_0";                                                                                       // JJ20030312
+> static UCHAR RMSearchKeyATAPI[] = "ATAPI_*";                                                                                   // JJ20030312
+> static UCHAR RMLDevDesc[] = "CDROM_#  CD-ROM / CD-RW / DVDs Drive";                                                            // JJ20030312
+> ADJUNCT xRMAdjLDev;                                                                                                            // JJ20030312
+> LDEVSTRUCT xRMLDevStruct =                                                                                                     // JJ20030312
+> {                                                                                                                              // JJ20030312
+>    RMLDevDesc,                                                                                                                 // JJ20030312
+>    0,                                                                                                                          // JJ20030312
+>    LDEV_CLASS_CDROM,                                                                                                           // JJ20030312
+>    0,                                                                                                                          // JJ20030312
+>    &xRMAdjLDev                                                                                                                 // JJ20030312
+> };                                                                                                                             // JJ20030312
+> static UCHAR RMSysNameDesc[] = " :  Logical CD-ROM Volume";                                                                    // JJ20030312
+> SYSNAMESTRUCT xRMSysNameStruct =                                                                                               // JJ20030312
+> {                                                                                                                              // JJ20030312
+>    RMSysNameDesc,                                                                                                              // JJ20030312
+>    NULL,                                                                                                                       // JJ20030312
+>    0,                                                                                                                          // JJ20030312
+>    0                                                                                                                           // JJ20030312
+> };                                                                                                                             // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+> #ifdef JJSMODS_VERBOSEPAUSE                                                                                                    // JJ20030312
+> static UCHAR PauseMsg[] =                                                                                                      // JJ20030312
+> "SYS    : Pausing JJSCDROM.DMD output...";                                                                                     // JJ20030312
+> MSGTABLE  PauseMsgParm = { MSG_REPLACEMENT_STRING,                                                                             // JJ20030312
+>    1,                                                                                                                          // JJ20030312
+>    PauseMsg,                                                                                                                   // JJ20030312
+> };                                                                                                                             // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+> 
+156a229,232
+> #ifdef JJSMODS_RESOURCEMANAGER                                                                                                 // JJ20030312
+>    (VOID)RMCreateDriver(&xRMDriverStruct, &hRMDriver);                                                                         // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+169a246,249
+> #ifdef JJSMODS_RESOURCEMANAGER                                                                                                 // JJ20030312
+>          if(hRMDriver != 0)                                                                                                    // JJ20030312
+>             (VOID)RMDestroyDriver(hRMDriver);                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+235a316,318
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    CDFlags = CDFlags & ~CDF_INIT_TIME | CDF_INIT_COMPLETE;                                                                     // JJ20030312
+> #else                                                                                                                          // JJ20030312
+237a321
+> #endif                                                                                                                         // JJ20030312
+243a328,357
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #pragma optimize("egls", off)                                                                                                  // JJ20030312
+> static VOID NEAR decimal2(USHORT NEAR * pos,                                                                                   // JJ20030312
+>                           UCHAR num)                                                                                           // JJ20030312
+> {                                                                                                                              // JJ20030312
+>    _asm                                                                                                                        // JJ20030312
+>    {                                                                                                                           // JJ20030312
+>       push bx                                                                                                                  // JJ20030312
+>       mov al, num                                                                                                              // JJ20030312
+>       aam                                                                                                                      // JJ20030312
+>       xchg al, ah                                                                                                              // JJ20030312
+>       add ax, '0'+'0'*256                                                                                                      // JJ20030312
+>       mov bx, pos                                                                                                              // JJ20030312
+>       mov [bx], ax                                                                                                             // JJ20030312
+>       pop bx                                                                                                                   // JJ20030312
+>    }                                                                                                                           // JJ20030312
+> }                                                                                                                              // JJ20030312
+> #pragma optimize("", on)                                                                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> #ifdef JJSMODS_RESOURCEMANAGER                                                                                                 // JJ20030312
+> static VOID NEAR RMSysName(HLDEV hRMLDev)                                                                                      // JJ20030312
+> {                                                                                                                              // JJ20030312
+>    HSYSNAME hRMSysName;                                                                                                        // JJ20030312
+>    RMSysNameDesc[0] = (UCHAR)(FirstDriveNumber + NumCDROMDrives + 'A');                                                        // JJ20030312
+>    (VOID)RMCreateSysName(hRMDriver,                                                                                            // JJ20030312
+>                          &hRMSysName,                                                                                          // JJ20030312
+>                          hRMLDev,                                                                                              // JJ20030312
+>                          &xRMSysNameStruct);                                                                                   // JJ20030312
+> }                                                                                                                              // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+278a393,395
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    USHORT                driverIndex, adapterIndex, unitIndex, bufferIndex;               /* Index pointers               */   // JJ20030312
+> #else                                                                                                                          // JJ20030312
+279a397
+> #endif                                                                                                                         // JJ20030312
+286a405,420
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>    USHORT                unitindex = 0;   /* Unit index                   */                                                   // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> #ifdef JJSMODS_RESOURCEMANAGER                                                                                                 // JJ20030312
+>    USHORT                RMunitindex = 0; /* RM unit index installed      */                                                   // JJ20030312
+>    HDEVICE hRMDevice;                                                                                                          // JJ20030312
+>    struct                                                                                                                      // JJ20030312
+>    {                                                                                                                           // JJ20030312
+>       USHORT   cMaxHandles;                                                                                                    // JJ20030312
+>       USHORT   cHandles;                                                                                                       // JJ20030312
+>       HADAPTER Handles[16];                                                                                                    // JJ20030312
+>    } xRMHandleList;                                                                                                            // JJ20030312
+>    HADAPTER hRMAdapterIDE;                                                                                                     // JJ20030312
+>    HADAPTER hRMAdapterParent;                                                                                                  // JJ20030312
+>    HLDEV hRMLDev;                                                                                                              // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+338a473,476
+> #ifdef JJSMODS_WORM2CDROM                                                                                                      // JJ20030312
+>             if ( (pAdapterInfo->UnitInfo[unitIndex].UnitType == UIB_TYPE_CDROM ||                                              // JJ20030312
+>                   (CDFlags & CDF_WORM2CDROM) && pAdapterInfo->UnitInfo[unitIndex].UnitType == UIB_TYPE_WORM) &&                // JJ20030312
+> #else                                                                                                                          // JJ20030312
+339a478
+> #endif                                                                                                                         // JJ20030312
+341a481,487
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>                if(UnitReadCDDAMode[unitindex] & 0x8000)                                                                        // JJ20030312
+>                {                                                                                                               // JJ20030312
+>                   unitindex++;                                                                                                 // JJ20030312
+>                   continue;                                                                                                    // JJ20030312
+>                }                                                                                                               // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+446a593,621
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>                      if(UnitReadCDDAMode[unitindex] & 1)                                                                       // JJ20030312
+>                         pUnitCB->DeviceInfo.Audio.capabilities |= DCAPS_CDDA;                                                  // JJ20030312
+>                      if(UnitReadCDDAMode[unitindex] & 2)                                                                       // JJ20030312
+>                         pUnitCB->DeviceInfo.Audio.capabilities |= DCAPS_XA;                                                    // JJ20030312
+>                      if(UnitReadCDDAMode[unitindex] & 4)                                                                       // JJ20030312
+>                         pUnitCB->DeviceInfo.Audio.capabilities |= DCAPS_MULTISESSION;                                          // JJ20030312
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>                      if (!IS_INTERFACE_MMC(pUnitCB))                                                                           // JJ20030312
+> #else                                                                                                                          // JJ20030312
+>                      if (pUnitCB->DeviceInfo.interface_type != INTERFACE_ATAPI)                                                // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+>                      {                                                                                                         // JJ20030312
+>                         pUnitCB->DeviceInfo.Audio.capabilities |=                                                              // JJ20030312
+>                                                       ((ULONG)(UnitReadCDDAMode[unitindex] & (3*8 + 3*32 + 7*128)) << (25-3)); // JJ20030312
+>                         switch((UnitReadCDDAMode[unitindex] / 1024) & 3)                                                       // JJ20030312
+>                         {                                                                                                      // JJ20030312
+>                            case 1:                                                                                             // JJ20030312
+>                               pUnitCB->DeviceInfo.Audio.capabilities |= DCAPS_UPC;                                             // JJ20030312
+>                               break;                                                                                           // JJ20030312
+>                            case 2:                                                                                             // JJ20030312
+>                               pUnitCB->DeviceInfo.Audio.capabilities |= DCAPS_UPC | DCAPS_UPC_IN_BCD;                          // JJ20030312
+>                               break;                                                                                           // JJ20030312
+>                            case 3:                                                                                             // JJ20030312
+>                               pUnitCB->DeviceInfo.Audio.capabilities |= DCAPS_UPC | DCAPS_UPC_IN_ASCII;                        // JJ20030312
+>                               break;                                                                                           // JJ20030312
+>                         }                                                                                                      // JJ20030312
+>                      }                                                                                                         // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+455a631,686
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>                         decimal2((USHORT NEAR *)&ProductIDMsg[0], (UCHAR)unitindex);                                           // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+>                         decimal2((USHORT NEAR *)&ProductIDMsg[5], (UCHAR)driverIndex);                                         // JJ20030312
+>                         decimal2((USHORT NEAR *)&ProductIDMsg[8], (UCHAR)adapterIndex);                                        // JJ20030312
+>                         decimal2((USHORT NEAR *)&ProductIDMsg[11], pUnitCB->UnitInfo.UnitSCSITargetID);                        // JJ20030312
+>                         decimal2((USHORT NEAR *)&ProductIDMsg[14], pUnitCB->UnitInfo.UnitSCSILUN);                             // JJ20030312
+>                         pInquiryData = &pUnitCB->InquiryData.vendor_id[0];                                                     // JJ20030312
+>                         f_BlockCopy((PBYTE)&ProductIDMsg[19], (PBYTE)&pInquiryData[0], 8);                                     // JJ20030312
+>                         f_BlockCopy((PBYTE)&ProductIDMsg[28], (PBYTE)&pInquiryData[8], 16);                                    // JJ20030312
+>                         f_BlockCopy((PBYTE)&ProductIDMsg[45], (PBYTE)&pInquiryData[24], 4);                                    // JJ20030312
+>                         ProductIDMsg[52] = '-';                                                                                // JJ20030312
+>                         if (pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_CDDA)                                               // JJ20030312
+>                            ProductIDMsg[52] = '+';                                                                             // JJ20030312
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>                         ProductIDMsg[53] = "-ST"[(pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_FORCECDDA_MASK) >> 25];       // JJ20030312
+> #else                                                                                                                          // JJ20030312
+>                         ProductIDMsg[53] = ' ';                                                                                // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+>                         ProductIDMsg[55] = '-';                                                                                // JJ20030312
+>                         if (pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_XA)                                                 // JJ20030312
+>                            ProductIDMsg[55] = '+';                                                                             // JJ20030312
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>                         ProductIDMsg[56] = "-TSN"[(pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_FORCECDXA_MASK) >> 27];      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+>                         ProductIDMsg[56] = ' ';                                                                                // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+>                         ProductIDMsg[58] = '-';                                                                                // JJ20030312
+>                         if (pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_MULTISESSION)                                       // JJ20030312
+>                            ProductIDMsg[58] = '+';                                                                             // JJ20030312
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>                         ProductIDMsg[59] =                                                                                     // JJ20030312
+>                                     "-TSCNHX"[(pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_FORCEMULTISESSION_MASK) >> 29];  // JJ20030312
+> #else                                                                                                                          // JJ20030312
+>                         ProductIDMsg[59] = ' ';                                                                                // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+>                         ProductIDMsg[61] = '-';                                                                                // JJ20030312
+>                         ProductIDMsg[62] = '-';                                                                                // JJ20030312
+>                         if (pUnitCB->DeviceInfo.Audio.capabilities & DCAPS_UPC)                                                // JJ20030312
+>                         {                                                                                                      // JJ20030312
+>                            ProductIDMsg[61] = '+';                                                                             // JJ20030312
+>                            ProductIDMsg[62] =                                                                                  // JJ20030312
+>                               "UPA"[(pUnitCB->DeviceInfo.Audio.capabilities & (DCAPS_UPC_IN_BCD | DCAPS_UPC_IN_ASCII)) >> 11]; // JJ20030312
+>                         }                                                                                                      // JJ20030312
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>                         if (IS_INTERFACE_MMC(pUnitCB))                                                                         // JJ20030312
+> #else                                                                                                                          // JJ20030312
+>                         if (pUnitCB->DeviceInfo.interface_type == INTERFACE_ATAPI)                                             // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+>                         {                                                                                                      // JJ20030312
+>                            ProductIDMsg[53] = '*';                                                                             // JJ20030312
+>                            ProductIDMsg[56] = '*';                                                                             // JJ20030312
+>                            ProductIDMsg[59] = '*';                                                                             // JJ20030312
+>                         }                                                                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+467a699
+> #endif                                                                                                                         // JJ20030312
+470a703,755
+> #ifdef JJSMODS_RESOURCEMANAGER                                                                                                 // JJ20030312
+>                      if(hRMDriver != 0)                                                                                        // JJ20030312
+>                      {                                                                                                         // JJ20030312
+>                         hRMDevice = (HDEVICE)0;                                                                                // JJ20030312
+>                         (VOID)RMADDToHDEVICE(&hRMDevice,                                                                       // JJ20030312
+>                                              driverIndex + 1,                                                                  // JJ20030312
+>                                              pAdapterInfo->UnitInfo[unitIndex].UnitHandle);                                    // JJ20030312
+>                         if(hRMDevice == (HDEVICE)0 &&                                                                          // JJ20030312
+>                            pUnitCB->DeviceInfo.interface_type == INTERFACE_ATAPI)                                              // JJ20030312
+>                         {                                                                                                      // JJ20030312
+>                            xRMHandleList.cMaxHandles = 1;                                                                      // JJ20030312
+>                            RMSearchKeyIDE[4] = (UCHAR)('0' + adapterIndex);                                                    // JJ20030312
+>                            if(!RMKeyToHandleList(HANDLE_PHYS_TREE,                                                             // JJ20030312
+>                                                  (PSZ)&RMSearchKeyIDE[0],                                                      // JJ20030312
+>                                                  (PHANDLELIST)&xRMHandleList) &&                                               // JJ20030312
+>                               xRMHandleList.cHandles != 0)                                                                     // JJ20030312
+>                            {                                                                                                   // JJ20030312
+>                               hRMAdapterIDE = (HADAPTER)xRMHandleList.Handles[0];                                              // JJ20030312
+>                               xRMHandleList.cMaxHandles = 16;                                                                  // JJ20030312
+>                               if(!RMKeyToHandleList(HANDLE_PHYS_TREE,                                                          // JJ20030312
+>                                                     (PSZ)&RMSearchKeyATAPI[0],                                                 // JJ20030312
+>                                                     (PHANDLELIST)&xRMHandleList))                                              // JJ20030312
+>                                  for(bufferIndex = 0;                                                                          // JJ20030312
+>                                      bufferIndex < xRMHandleList.cHandles;                                                     // JJ20030312
+>                                      bufferIndex++)                                                                            // JJ20030312
+>                                  {                                                                                             // JJ20030312
+>                                     (VOID)RMHandleToParent((RMHANDLE)xRMHandleList.Handles[bufferIndex],                       // JJ20030312
+>                                                            (PRMHANDLE)&hRMAdapterParent);                                      // JJ20030312
+>                                     if(hRMAdapterParent != hRMAdapterIDE)                                                      // JJ20030312
+>                                        continue;                                                                               // JJ20030312
+>                                     hRMLDev = (HLDEV)0;                                                                        // JJ20030312
+>                                     (VOID)RMHDevToHLDev((HDEVICE)xRMHandleList.Handles[bufferIndex],                           // JJ20030312
+>                                                         HANDLE_SYS_TREE, // ??                                                 // JJ20030312
+>                                                         &hRMLDev);                                                             // JJ20030312
+>                                     if(hRMLDev == (HLDEV)0)                                                                    // JJ20030312
+>                                     {                                                                                          // JJ20030312
+>                                        hRMDevice = (HDEVICE)xRMHandleList.Handles[bufferIndex];                                // JJ20030312
+>                                        break;                                                                                  // JJ20030312
+>                                     }                                                                                          // JJ20030312
+>                                  }                                                                                             // JJ20030312
+>                            }                                                                                                   // JJ20030312
+>                         }                                                                                                      // JJ20030312
+>                         xRMAdjLDev.AdjLength = sizeof(ADJUNCT);                                                                // JJ20030312
+>                         xRMAdjLDev.AdjType = ADJ_DEVICE_NUMBER;                                                                // JJ20030312
+>                         xRMAdjLDev.Device_Number = RMunitindex++;                                                              // JJ20030312
+>                         xRMLDevStruct.LDevHDevice = (HDEVICE)0;                                                                // JJ20030312
+>                         (VOID)RMCreateLDev(hRMDriver,                                                                          // JJ20030312
+>                                            &hRMLDev,                                                                           // JJ20030312
+>                                            hRMDevice,                                                                          // JJ20030312
+>                                            &xRMLDevStruct);                                                                    // JJ20030312
+>                         RMSysName(hRMLDev);                                                                                    // JJ20030312
+>                      }                                                                                                         // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+485a771,773
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>                      unitindex++;                                                                                              // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+491a780,782
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+>                      if ( IS_INTERFACE_MMC(pUnitCB) &&                                                                         // JJ20030312
+> #else                                                                                                                          // JJ20030312
+492a784
+> #endif                                                                                                                         // JJ20030312
+514a807,810
+> #ifdef JJSMODS_RESOURCEMANAGER                                                                                                 // JJ20030312
+>                               if(hRMDriver != 0)                                                                               // JJ20030312
+>                                  RMSysName(hRMLDev);                                                                           // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+535a832,836
+> #ifdef JJSMODS_VERBOSEPAUSE                                                                                                    // JJ20030312
+>    if ((CDFlags & (CDF_VERBOSE | CDF_VERBOSEPAUSE)) == (CDF_VERBOSE | CDF_VERBOSEPAUSE))                                       // JJ20030312
+>       DevHelp_Save_Message( (NPBYTE) &PauseMsgParm);                                                                           // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+634a936,940
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    if (!(((ULONG)NumCBs * CBSize) < (ULONG)FreePoolSpace))                                                                     // JJ20030312
+>       NumCBs = FreePoolSpace / CBSize;                                                                                         // JJ20030312
+>    PoolSize = NumCBs * CBSize;                                                                                                 // JJ20030312
+> #else                                                                                                                          // JJ20030312
+641a948
+> #endif                                                                                                                         // JJ20030312
+762a1070,1073
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>    USHORT unit = -1;                                                                                                           // JJ20030312
+>    USHORT bp, bm;                                                                                                              // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+773a1085,1090
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    for (; *pCmdString != 0; pCmdString++)                                                                                      // JJ20030312
+>       if (*pCmdString >= 'a' &&  *pCmdString <= 'z')                                                                           // JJ20030312
+>          *pCmdString -= ('a' - 'A');                                                                                           // JJ20030312
+>    pCmdString[1] = 0;                                                                                                          // JJ20030312
+> #else                                                                                                                          // JJ20030312
+778a1096
+> #endif                                                                                                                         // JJ20030312
+782a1101,1103
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+>    for (; *pCmdString != 0; pCmdString++)                                                                                      // JJ20030312
+> #else                                                                                                                          // JJ20030312
+783a1105
+> #endif                                                                                                                         // JJ20030312
+795a1118,1125
+> #ifdef JJSMODS_VERBOSEPAUSE                                                                                                    // JJ20030312
+>             pCmdString++;                                                                                                      // JJ20030312
+>             if ( *pCmdString == 'P' )                                                                                          // JJ20030312
+>             {                                                                                                                  // JJ20030312
+>                CDFlags |= CDF_VERBOSEPAUSE;                                                                                    // JJ20030312
+>                pCmdString++;                                                                                                   // JJ20030312
+>             }                                                                                                                  // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+822a1153,1324
+> 
+> #ifdef JJSMODS_WORM2CDROM                                                                                                      // JJ20030312
+>          case 'W':                                                                                                             // JJ20030312
+>             CDFlags |= CDF_WORM2CDROM;                                                                                         // JJ20030312
+>             break;                                                                                                             // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+> 
+> #ifdef JJSMODS_ENFORCEMENTS                                                                                                    // JJ20030312
+>          case 'U':                                                                                                             // JJ20030312
+>             n = 0;                                                                                                             // JJ20030312
+>             pCmdString++;                                                                                                      // JJ20030312
+>             if ( *pCmdString == ':' )                                                                                          // JJ20030312
+>             {                                                                                                                  // JJ20030312
+>                pCmdString++;                                                                                                   // JJ20030312
+>                if ( (*pCmdString >= '0') && (*pCmdString <= '9') )                                                             // JJ20030312
+>                {                                                                                                               // JJ20030312
+>                   n = (BYTE)(*pCmdString - '0');                                                                               // JJ20030312
+>                   if ((*(pCmdString+1) >= '0') && (*(pCmdString+1) <= '9'))                                                    // JJ20030312
+>                   {                                                                                                            // JJ20030312
+>                      n = (BYTE)(10 * n + ( *(pCmdString+1) - '0'));                                                            // JJ20030312
+>                      pCmdString++;                                                                                             // JJ20030312
+>                   }                                                                                                            // JJ20030312
+>                }                                                                                                               // JJ20030312
+>             }                                                                                                                  // JJ20030312
+>             if(n < MAX_DRIVE_LETTERS)                                                                                          // JJ20030312
+>                unit = n;                                                                                                       // JJ20030312
+>             break;                                                                                                             // JJ20030312
+> 
+>          case 'I':                                                                                                             // JJ20030312
+>             bp = 0x8000;                                                                                                       // JJ20030312
+>             bm = ~0x8000;                                                                                                      // JJ20030312
+> SetUnitReadCDDAMode:                                                                                                           // JJ20030312
+>             if(unit == -1)                                                                                                     // JJ20030312
+>                 for(i = 0; i < MAX_DRIVE_LETTERS; i++)                                                                         // JJ20030312
+>                     UnitReadCDDAMode[i] = UnitReadCDDAMode[i] & bm | bp;                                                       // JJ20030312
+>             else                                                                                                               // JJ20030312
+>                 UnitReadCDDAMode[unit] = UnitReadCDDAMode[unit] & bm | bp;                                                     // JJ20030312
+>             break;                                                                                                             // JJ20030312
+> 
+>          case 'F':                                                                                                             // JJ20030312
+>             pCmdString++;                                                                                                      // JJ20030312
+>             switch(*pCmdString)                                                                                                // JJ20030312
+>             {                                                                                                                  // JJ20030312
+>                case 'C':                                                                                                       // JJ20030312
+>                   pCmdString++;                                                                                                // JJ20030312
+>                   switch(*pCmdString)                                                                                          // JJ20030312
+>                   {                                                                                                            // JJ20030312
+>                      case '+':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 1;                                                                                                // JJ20030312
+>                         bm = ~1;                                                                                               // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'S':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 1*8;                                                                                              // JJ20030312
+>                         bm = ~(3*8);                                                                                           // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'T':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 2*8;                                                                                              // JJ20030312
+>                         bm = ~(3*8);                                                                                           // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      default:  /* /FC = /FC+ & /FCS */                                                                         // JJ20030312
+>                         bp = 1 + 1*8;                                                                                          // JJ20030312
+>                         bm = ~(1 + 3*8);                                                                                       // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                   }                                                                                                            // JJ20030312
+>                   break;                                                                                                       // JJ20030312
+>                case 'X':                                                                                                       // JJ20030312
+>                   pCmdString++;                                                                                                // JJ20030312
+>                   switch(*pCmdString)                                                                                          // JJ20030312
+>                   {                                                                                                            // JJ20030312
+>                      case '+':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 2;                                                                                                // JJ20030312
+>                         bm = ~2;                                                                                               // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'T':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 1*32;                                                                                             // JJ20030312
+>                         bm = ~(3*32);                                                                                          // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'S':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 2*32;                                                                                             // JJ20030312
+>                         bm = ~(3*32);                                                                                          // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'N':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 3*32;                                                                                             // JJ20030312
+>                         bm = ~(3*32);                                                                                          // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      default:  /* /FX = /FX+ & /FXS */                                                                         // JJ20030312
+>                         bp = 2 + 2*32;                                                                                         // JJ20030312
+>                         bm = ~(2 + 3*32);                                                                                      // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                   }                                                                                                            // JJ20030312
+>                   break;                                                                                                       // JJ20030312
+>                case 'M':                                                                                                       // JJ20030312
+>                   pCmdString++;                                                                                                // JJ20030312
+>                   switch(*pCmdString)                                                                                          // JJ20030312
+>                   {                                                                                                            // JJ20030312
+>                      case '+':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 4;                                                                                                // JJ20030312
+>                         bm = ~4;                                                                                               // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'T':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 1*128;                                                                                            // JJ20030312
+>                         bm = ~(7*128);                                                                                         // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'S':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 2*128;                                                                                            // JJ20030312
+>                         bm = ~(7*128);                                                                                         // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'C':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 3*128;                                                                                            // JJ20030312
+>                         bm = ~(7*128);                                                                                         // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'N':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 4*128;                                                                                            // JJ20030312
+>                         bm = ~(7*128);                                                                                         // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'H':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 5*128;                                                                                            // JJ20030312
+>                         bm = ~(7*128);                                                                                         // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'X':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 6*128;                                                                                            // JJ20030312
+>                         bm = ~(7*128);                                                                                         // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      default:  /* /FM = /FM+ & /FMS */                                                                         // JJ20030312
+>                         bp = 4 + 2*128;                                                                                        // JJ20030312
+>                         bm = ~(4 + 7*128);                                                                                     // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                   }                                                                                                            // JJ20030312
+>                   break;                                                                                                       // JJ20030312
+>                case 'U':                                                                                                       // JJ20030312
+>                   pCmdString++;                                                                                                // JJ20030312
+>                   switch(*pCmdString)                                                                                          // JJ20030312
+>                   {                                                                                                            // JJ20030312
+>                      case 'U':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 1*1024;                                                                                           // JJ20030312
+>                         bm = ~(3*1024);                                                                                        // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'P':                                                                                                 // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 2*1024;                                                                                           // JJ20030312
+>                         bm = ~(3*1024);                                                                                        // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                      case 'A':                                                                                                 // JJ20030312
+>                      default:  /* /FU = /FUA */                                                                                // JJ20030312
+>                         pCmdString++;                                                                                          // JJ20030312
+>                         bp = 3*1024;                                                                                           // JJ20030312
+>                         bm = ~(3*1024);                                                                                        // JJ20030312
+>                         break;                                                                                                 // JJ20030312
+>                   }                                                                                                            // JJ20030312
+>                   break;                                                                                                       // JJ20030312
+>                default:  /* /F = /FC & /FX & /FM */                                                                            // JJ20030312
+>                   bp = 1 + 2 + 4 + 1*8 + 2*32 + 2*128;                                                                         // JJ20030312
+>                   bm = ~(1 + 2 + 4 + 3*8 + 3*32 + 7*128);                                                                      // JJ20030312
+>                   break;                                                                                                       // JJ20030312
+>             }                                                                                                                  // JJ20030312
+>             goto SetUnitReadCDDAMode;                                                                                          // JJ20030312
+> #endif                                                                                                                         // JJ20030312

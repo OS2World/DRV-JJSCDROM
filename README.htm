@@ -1,0 +1,535 @@
+<!doctype html public "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  <meta name="language" content="en">
+  <meta name="author" content="Takayuki 'January June' Suwa / Beliefia Productions">
+  <meta name="date" content="2003-03-28T01:48:24+09:00">
+  <link rev="made" href="mailto:jjsuwa@sys3175.com">
+  <title>Modified OS/2 CD-ROM / CD-RW / DVDs device manager driver, build JJ20030328 User's Guide</title>
+ </head>
+
+ <body>
+
+  <h1>Modified OS/2 CD-ROM / CD-RW / DVDs device manager driver, build JJ20030328</h1>
+  with CD-DA digital reading / CD-XA reading / multisessioning / CD-Extra enhancement<br>
+  <strong>Modification copyright (c) 1999-2003 Takayuki 'January June' Suwa / Beliefia Productions<br>
+          Modification copyright (c) 2000 Robert Lalla</strong>
+  <hr>
+
+  <hr>
+
+  <h1>0. <a name="0">Table of Contents</a></h1>
+  <ul>
+   <li>0. <a href="#0">Table of Contents</a></li>
+   <li>1. <a href="#1">Welcome</a>
+       <ul>
+        <li>1.1. <a href="#1.1">Copyright and Disclaimer</a></li>
+        <li>1.2. <a href="#1.2">System Requirements</a></li>
+        <li>1.3. <a href="#1.3">Contact Author</a></li>
+        <li>1.4. <a href="#1.4">Revision History</a></li>
+       </ul></li>
+   <li>2. <a href="#2">How to Use</a>
+       <ul>
+        <li>2.1. <a href="#2.1">In This Archive</a></li>
+        <li>2.2. <a href="#2.2">Driver Installation</a></li>
+        <li>2.3. <a href="#2.3">JJSCDROM.DMD Options</a>
+            <ul>
+             <li>2.3.1. <a href="#2.3.1">CONFIG.SYS Syntax</a></li>
+             <li>2.3.2. <a href="#2.3.2">Option Diagram</a></li>
+             <li>2.3.3. <a href="#2.3.3">Option Descriptions</a></li>
+             <li>2.3.4. <a href="#2.3.4">Startup Output Description</a></li>
+            </ul></li>
+       </ul></li>
+   <li>3. <a href="#3">Added / Modified IOCtl Functions</a>
+       <ul>
+        <li>3.1. <a href="#3.1"><tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_FEATURE_CTRL</tt></a></li>
+        <li>3.2. <a href="#3.2"><tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_DEVICESTATUS</tt></a></li>
+        <li>3.3. <a href="#3.3"><tt>IOCTL_CDROMDISK2</tt> - <tt>CDROMDISK2_FEATURES</tt></a></li>
+       </ul></li>
+   <li>4. <a href="#4">Credits</a></li>
+  </ul>
+  <hr>
+
+  <hr>
+
+  <h1>1. <a name="1">Welcome</a></h1>
+  JJSCDROM.DMD is a modified version of OS/2 CD-ROM / CD-RW / DVDs device manager driver (OS2CDROM.DMD), based on the latest OS/2 DDK on-line source code (DDK_020517).<br>
+  This driver supports:
+  <ul>
+   <li>Automatic SCSI-3/MMC-complient drive capability recognition by default, like as ATAPI drive.</li>
+   <li>&quot;CD-Extra&quot; (audio-CD w/additional data session) mounting.</li>
+   <li>Feature enabling on a per-unit-basis. These features are:
+       <ul>
+        <li>turn on &quot;CD-DA readable&quot;, &quot;CD-XA readable&quot; and &quot;multisessioning-aware&quot; flags</li>
+        <li>set vendor-specific SCSI CD-DA digital reading / CD-XA reading / multisessioning / UPC reading methods for non-SCSI-3/MMC-complient drives</li>
+       </ul></li>
+   <li>&quot;WORM devices as CD-ROM&quot; treatment for some old WORM-style CD-R drives such as Yamaha CDR10x or any drives filtered by RSJ CD-Writer LOCKCDR.FLT.</li>
+   <li>Per-unit-basis &quot;ignore drive&quot; feature.</li>
+   <li>Enriched /V option output.</li>
+   <li>Additional IOCtl functions that control multisessioning treatment and track 1 negative start LBA fix (Midbar CDS-200 spoiler).</li>
+   <li>Of course functionally equivalent to official OS2CDROM.DMD, including CD-RW / DVDs UDF writing and formatting, and USB connection support.</li>
+  </ul>
+  <hr>
+
+  <h2>1.1. <a name="1.1">Copyright and Disclaimer</a></h2>
+  <ol>
+   <li>'MODIFICATION PART OF THIS SOFTWARE AND WHOLE SET OF DOCUMENTS' (CALLED 'THE PACKAGE') ARE ENTIRELY COPYRIGHTED BY TAKAYUKI 'JANUARY JUNE' SUWA / BELIEFIA PRODUCTIONS AND ROBERT LALLA, AUTHORS / HOLDERS OF THE PRODUCT.</li>
+   <li>THE PACKAGE IS PROVIDED 'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.</li>
+   <li>IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR IBM CORPORATION BE LIABLE FOR ANY DAMAGES, WHETHER IN CONTRACT OR TORT (INCLUDED NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE PRODUCT, EVEN THOUGH SUCH HOLDERS HAS BEEN ADVISED OF THE POSSIBILITY OF ANY DAMAGE.</li>
+  </ol>
+  You accept the copyright and disclaimer statement above by installing JJSCDROM.DMD. If you do not agree with this, you must remove all files in the package from your system.
+  <hr>
+
+  <h2>1.2. <a name="1.2">System Requirements</a></h2>
+  This software is designed to function in an environment such as:
+  <ul>
+   <li>OS/2 version 2 or later (OS/2 v2.x / Warp v3 / WarpServer v4 / Warp v4 / WSeB / MCPs / ACPs / eCS, uniprocessor or multiprocessor)<br>
+       (version 3 or later for lxLite-compressed version)</li>
+   <li>1 or more CD-ROM / CD-RW / DVDs units</li>
+  </ul>
+  <hr>
+
+  <h2>1.3. <a name="1.3">Contact Author</a></h2>
+  Email to Takayuki 'January June' Suwa:
+  <ul>
+   <li><a href="mailto:jjsuwa@sys3175.com">mailto:jjsuwa@sys3175.com</a></li>
+  </ul>
+  <hr>
+
+  <h2>1.4. <a name="1.4">Revision History</a></h2>
+  <ul>
+   <li><strong>build JJ20000711</strong> - July 11th,2000
+       <ol>
+        <li>Added &quot;CD-Extra&quot; support code, from Robert Lalla. Thanks.</li>
+       </ol></li>
+   <li><strong>build JJ20010825</strong> - August 25th,2001
+       <ol>
+        <li>Rebuilt. Now based on DDK_000821 source, thus CD-RW / DVDs writing and formatting, and USB connection support are also included.</li>
+        <li>Added NEC-46x multisessioning method enabling feature.</li>
+        <li>Included GNU-diff'ed information files from the original DDK on-line source code.</li>
+        <li>Included symbol information file for debugging.</li>
+       </ol></li>
+   <li><strong>build JJ20010827</strong> - August 27th,2001
+       <ol>
+        <li>Added new 'multisession handling control' IOCtl, category IOCTL_CDROMDISK (0x80) function CDROMDISK_MS_CTRL (0x4a).</li>
+        <li>Added bit 28-29 to IOCTL_CDROMDISK - CDROMDISK_DEVICESTATUS device status.</li>
+        <li>Added new bit FEATURE_MSCTRL_SUPPORT (0x00008000) to feature IOCtl category IOCTL_CDROMDISK2 (0x82) function CDROMDISK2_FEATURES (0x63).</li>
+        <li>Included lxLite-compressed version.</li>
+       </ol></li>
+   <li><strong>build JJ20010828</strong> - August 28th,2001
+       <ol>
+        <li>Fixed insufficient 'multisession handling control' IOCtl implementation. Now works correctly (I hope <tt>:)</tt>)</li>
+       </ol></li>
+   <li><strong>build JJ20010911</strong> - September 11th,2001
+       <ol>
+        <li>Increased /V LUN digit width to 2 for more than 9 LUNs such as wide-SCSI.</li>
+        <li>Modified to be Resource Manager-aware. Now CD-ROM devices / logical units will be shown in RM device / logical view, if adapter DDs are also RM-aware.</li>
+       </ol></li>
+   <li><strong>build JJ20010913</strong> - September 13th,2001
+       <ol>
+        <li>Fixed command line parser bug. No longer parse beyond EOL.</li>
+        <li>Added /VP option (verbose w/pause).</li>
+       </ol></li>
+   <li><strong>build JJ20020109</strong> - January 9th,2002
+       <ol>
+        <li>Withdrew Resource Manager modification. Please teach me how to use RM <tt>:)</tt></li>
+       </ol></li>
+   <li><strong>build JJ20020113</strong> - January 13th,2002
+       <ol>
+        <li>Added CD-RW random packet writing capability recognition (experimental, not tested).</li>
+        <li>Added SCSI-3/MMC-compliant drive capabilities recognition. Now CD-DA digital reading (tested) / CD-XA reading (not tested) / multisessioning (tested) capabilities and methods of such SCSI drives will be detected automatically without any options <tt>:)</tt></li>
+        <li>Related to the above, fixed problem of block descriptor length being ignored in several SCSI-3/MMC / ATAPI Mode Sense (0x5a) - CD Capabilities and Mechanical Status Page (0x2a) processes.</li>
+       </ol></li>
+   <li><strong>build JJ20020318</strong> - March 18th,2002
+       <ol>
+        <li>Withdrew block descriptor length modification on ATAPI units (possibly side-effects).</li>
+        <li>Normalized makefile / DDK tools path allocation <tt>:)</tt></li>
+       </ol></li>
+   <li><strong>build JJ20020824</strong> - August 24th,2002
+       <ol>
+        <li>Fixed problem in communicating with VCDROM.SYS. Now corrected (I hope) for VDM / WinOS2.</li>
+       </ol></li>
+   <li><strong>build JJ20021016</strong> - October 16th,2002
+       <ol>
+        <li>Rebuilt. Now based on DDK_020517 source, thus several CD-RW / DVDs packet writing fixes are also included.</li>
+        <li>Added to sources some pragmas for safe optimization and optimized more.</li>
+        <li>Improved CD-RW random packet writing capability recognition (but still experimental, not tested).</li>
+        <li>Improved block descriptor handling of SCSI-3/MMC / ATAPI Mode Sense (0x5a).</li>
+        <li>Fixed and improved 'multisession handling control' IOCtl implementation. Now can restrict only the 1st session TOC using SCSI-3/MMC / ATAPI drives (Midbar CDS-200 spoiler).</li>
+        <li>Added 'track 1 negative start LBA fix' feature (Midbar CDS-200 spoiler), and renamed 'multisession handling control' IOCtl to 'feature control'.</li>
+        <li>Corrected documentation (this file) by Sant Coetzer. Thanks.</li>
+       </ol></li>
+   <li><strong>build JJ20021018</strong> - October 18th,2002
+       <ol>
+        <li>Changed to all SCSI vendor-specific method enforcements being ignored on SCSI-3/MMC / ATAPI drives.</li>
+        <li>Improved CD-DA Audio Channel Control processing.</li>
+       </ol></li>
+   <li><strong>build JJ20021027</strong> - October 27th,2002
+       <ol>
+        <li>Added SCSI-3/MMC-compliant changer drive support (experimental, not tested).</li>
+        <li>Added UPC reading method enforcement options (/FUx) for non-SCSI-3/MMC / ATAPI drives.</li>
+        <li>Added Japanese documentation.</li>
+       </ol></li>
+   <li><strong>build JJ20021112</strong> - November 12th,2002
+       <ol>
+        <li>Fixed several severe problems introduced from build JJ20021016, including CD-DA / CD-XA sector reading, medium ejection and so on.</li>
+        <li>Optimized more for size, mainly to cut off redundant IORB zeroings.</li>
+       </ol></li>
+   <li><strong>build JJ20021119</strong> - November 19th,2002
+       <ol>
+        <li>Re-added Resource Manager modification. CD-ROM devices / logical units will be shown in RM device / logical view again.</li>
+        <li>Changed compiler optimization switch /Ot (for speed) to /Os (for size).</li>
+       </ol></li>
+   <li><strong>build JJ20030312</strong> - March 12th,2003
+       <ol>
+        <li>Withdrew incorrect CD-RW packet writing modifications, especially incremental writes. Now can write / format UDF on CD-RW medium alike the original (tested by TEAC CD-W216E).</li>
+        <li>Changed SCSI-3/MMC / ATAPI Mode Sense (0x5a) block descriptor handling to being less impact.</li>
+        <li>Optimized more for size.</li>
+       </ol></li>
+   <li><strong>build JJ20030326</strong> - March 26th,2003
+       <ol>
+        <li>Incresed number of 64kB internal CD-RW incremental write buffers 4 times, to 16.</li>
+        <li>Modified internal CD-RW incremental write buffers to being freed physically when flushed.</li>
+        <li>Added long-forgotton /FCT CD-DA seek modification (but not tested).</li>
+        <li>Modified writable device status to being reflected in the medium types (-R/RW/RAM) rather than the specific device product IDs.</li>
+       </ol></li>
+   <li><strong>build JJ20030328</strong> - March 28th,2003
+       <ol>
+        <li>Fixed lack of multisession/CD-Extra capability introduced from build JJ20030312. Thanks to Rotondi Marco and Roy Baerwald.</li>
+       </ol></li>
+  </ul>
+  <hr>
+
+  <hr>
+
+  <h1>2. <a name="2">How to Use</a></h1>
+  <hr>
+
+  <h2>2.1. <a name="2.1">In This Archive</a></h2>
+  <dl>
+   <dt><tt>JJSCDROM.dmd</tt></dt>
+    <dd>Modified OS/2 CD-ROM / CD-RW / DVDs device manager driver file</dd>
+   <dt><tt>JJSCDROM.sym</tt></dt>
+    <dd>Symbol information file for debugging</dd>
+   <dt><tt>README.htm</tt></dt>
+    <dd>This document</dd>
+   <dt><tt>READMEJ.htm</tt></dt>
+    <dd>This document in Japanese</dd>
+   <dt><tt>cmprssed\JJSCDROM.dmd</tt></dt>
+    <dd>lxLite-compressed version of JJSCDROM.dmd, requires Warp v3 or later; May work well or not <tt>:)</tt></dd>
+   <dt><tt>source\source.zip</tt></dt>
+    <dd>Zipped GNU-diffs from the original source files; This includes long-filenames</dd>
+  </dl>
+  <hr>
+
+  <h2>2.2. <a name="2.2">Driver Installation</a></h2>
+  <ol>
+   <li>Unzip archive to where you desire. (e.g. C:\JJSCDROM)</li>
+   <li>Find in your CONFIG.SYS
+       <table border="1"><tbody><tr><td>
+<pre>DEVICE=<i>d</i>:\OS2\BOOT\OS2CDROM.DMD</pre>
+       </td></tr></tbody></table>
+       and remove or disable it.</li>
+   <li>Add to your CONFIG.SYS a line like
+       <table border="1"><tbody><tr><td>
+<pre>DEVICE=<i>d</i>:\<i>path</i>\JJSCDROM.dmd</pre>
+       </td></tr></tbody></table>
+       (<i>d</i> and <i>path</i> must be replaced with actual installation drive / path)</li>
+   <li>Restart your system.</li>
+  </ol>
+  <hr>
+
+
+
+  <h2>2.3. <a name="2.3">JJSCDROM.DMD Options</a></h2>
+  <hr>
+
+  <h3>2.3.1. <a name="2.3.1">CONFIG.SYS Syntax</a></h3>
+  <table border="1"><tbody><tr><td>
+<pre>DEVICE=d:\path\JJSCDROM.DMD [options]</pre>
+  </td></tr></tbody></table>
+  <hr>
+
+  <h3>2.3.2. <a name="2.3.2">Option Diagram</a></h3>
+  <table border="1"><tbody><tr><td>
+<pre>----+- /Q -------+-+--- /F[C[+|S|T]|X[+|T|S|N]|M[+|T|S|C|N|H|X]|U[U|P|A]] -+---->
+  ^ |          ^ | | ^                                                     | ^
+  | +- /V[P] ->| | | +-----------------------------------------------------+ |
+  | +- /R:n -->| | +---------------------------------------------------------+
+  | +- /S ---->| |
+  | +- /W -----+ |
+  | +----------+ |
+  +--------------+
+
+&nbsp;
+  --+--- /U:n -+--- /F[C[+|S|T]|X[+|T|S|N]|M[+|T|S|C|N|H|X]|U[U|P|A]] -+---+---||
+    | ^        | ^                                                     | ^ | ^
+    | |        | +-----------------------------------------------------+ | | |
+    | |        +- /I ----------------------------------------------------+ | |
+    | +--------------------------------------------------------------------+ |
+    +------------------------------------------------------------------------+</pre>
+  </td></tr></tbody></table>
+  <hr>
+
+  <h3>2.3.3. <a name="2.3.3">Option Descriptions</a></h3>
+  <dl>
+   <dt>/Q</dt>
+    <dd>quiet; displays no messages if not installed</dd>
+   <dt>/V</dt>
+    <dd>verbose; displays CD-ROM unit information</dd>
+   <dt>/VP</dt>
+    <dd>same as /V, with pausing (requires PAUSEONERROR=YES)</dd>
+   <dt>/R:n</dt>
+    <dd>reserves at least n driveletters (driveletter reservation)</dd>
+   <dt>/S</dt>
+    <dd>assigns only 1 driveletter to SCSI-3/MMC / ATAPI changer units</dd>
+   <dt>/W</dt>
+    <dd>treats all WORM-style devices as CD-ROM; in order to not apply this treatment to specific unit(s), use /U:n /I</dd>
+   <dt>/U:n</dt>
+    <dd>specifies unit number for /Fxy and /I, 0 based</dd>
+   <dt>/I</dt>
+    <dd>ignores unit (no driveletter assignment)</dd>
+   <dt>/Fxy</dt>
+    <dd>enforces CD-DA / CD-XA / multisessioning / UPC treatments; without preceding /U, applies to all units
+        <dl>
+         <dt>/FC+</dt>
+          <dd>forces &quot;CD-DA readable&quot; flag on</dd>
+         <dt>/FCS</dt>
+          <dd>enforces Sony CDU-561 compatible SCSI CD-DA readout method <sup>*</sup></dd>
+         <dt>/FCT</dt>
+          <dd>enforces Toshiba XM-3401 compatible SCSI CD-DA readout method <sup>*</sup></dd>
+         <dt>/FC </dt>
+          <dd>same as /FC+ /FCS</dd>
+         <dt>/FX+</dt>
+          <dd>forces &quot;CD-XA readable&quot; flag on</dd>
+         <dt>/FXT</dt>
+          <dd>enforces Toshiba XM-3401 compatible SCSI CD-XA readout method <sup>*</sup></dd>
+         <dt>/FXS</dt>
+          <dd>enforces Sony CDU-561 compatible SCSI CD-XA readout method <sup>*</sup></dd>
+         <dt>/FXN</dt>
+          <dd>enforces NEC 84-1 compatible SCSI CD-XA readout method <sup>*</sup></dd>
+         <dt>/FX </dt>
+          <dd>same as /FX+ /FXS</dd>
+         <dt>/FM+</dt>
+          <dd>forces &quot;multisessioning-aware&quot; flag on</dd>
+         <dt>/FMT</dt>
+          <dd>enforces Toshiba XM-3401 compatible SCSI multisessioning method <sup>*</sup></dd>
+         <dt>/FMS</dt>
+          <dd>enforces Sony CDU-561 compatible SCSI multisessioning method <sup>*</sup></dd>
+         <dt>/FMC</dt>
+          <dd>enforces Chinon CDS-535 compatible SCSI multisessioning method <sup>*</sup></dd>
+         <dt>/FMN</dt>
+          <dd>enforces NEC 84-1 compatible SCSI multisessioning method <sup>*</sup></dd>
+         <dt>/FMH</dt>
+          <dd>enforces HP C4324 compatible SCSI multisessioning method <sup>*</sup></dd>
+         <dt>/FMX</dt>
+          <dd>enforces NEC 46x compatible SCSI multisessioning method <sup>*</sup></dd>
+         <dt>/FM</dt>
+          <dd>same as /FM+ /FMS</dd>
+         <dt>/FUU</dt>
+          <dd>marks as &quot;UPC readable&quot; and enforces unpacked raw UPC format <sup>*</sup></dd>
+         <dt>/FUP</dt>
+          <dd>marks as &quot;UPC readable&quot; and enforces packed raw UPC format <sup>*</sup></dd>
+         <dt>/FUA</dt>
+          <dd>marks as &quot;UPC readable&quot; and enforces ASCII raw UPC format <sup>*</sup></dd>
+         <dt>/FU</dt>
+          <dd>same as /FUA</dd>
+         <dt>/F</dt>
+          <dd>same as /FC+ /FCS /FX+ /FXS /FM+ /FMS</dd>
+        </dl>
+        <sup>*</sup> because SCSI-3/MMC / ATAPI drives can automatically detect and configure their own capabilities, these options are ignored on such drives.</dd>
+  </dl>
+  <hr>
+
+  <h3>2.3.4. <a name="2.3.4">Startup Output Description</a></h3>
+
+  <table border="1"><tbody><tr><td>
+<pre>IBM OS/2 JJSCDROM.DMD (DDK_020517) (JJ20030328)
+ui : di-ai-un-lu : vendor   product          rev  : da xa ms up
+00 : 01-01-01-00 : TEAC     CD-W216E         1.0A : +* +* +* +A
+01 : 02-00-03-00 : TEAC     CD-ROM CD-532S   3.0A : +S +S +S --
+02 : 02-00-05-00 : RICOH    MP6200S          2.40 : +* +* +* +A
+^^   ^^ ^^ ^^ ^^   ^^^^^^^^ ^^^^^^^^^^^^^^^^ ^^^^   ^^ ^^ ^^ ^^
+|    |  |  |  |    |        |                |      || || || ||
+a    b  c  d  e    f        g                h      ij kl mn op</pre>
+  </td></tr></tbody></table>
+  <dl>
+   <dt>a</dt>
+    <dd># of CD-ROM unit index (for /U option)</dd>
+   <dt>b</dt>
+    <dd># of adapter device driver index installed</dd>
+   <dt>c</dt>
+    <dd># of adapter index controlled by each adapter device driver</dd>
+   <dt>d</dt>
+    <dd>physical unit number of CD-ROM units connected to each adapter</dd>
+   <dt>e</dt>
+    <dd>logical unit number on each physical unit</dd>
+   <dt>f, g, h</dt>
+    <dd>device inquiry strings</dd>
+   <dt>i</dt>
+    <dd>'+' if &quot;CD-DA readable&quot; flag is turned on</dd>
+   <dt>j</dt>
+    <dd>SCSI CD-DA reading method enforced [S/T], or '-' if not enforced<br>
+        '*' if SCSI-3/MMC / ATAPI drive and therefore automatically configured</dd>
+   <dt>k</dt>
+    <dd>'+' if &quot;CD-XA readable&quot; flag is turned on</dd>
+   <dt>l</dt>
+    <dd>SCSI CD-XA reading method enforced [T/S/N], or '-' if not enforced<br>
+        '*' if SCSI-3/MMC / ATAPI drive and therefore automatically configured</dd>
+   <dt>m</dt>
+    <dd>'+' if &quot;multisessioning-aware&quot; flag is turned on</dd>
+   <dt>n</dt>
+    <dd>SCSI multisessioning method enforced [T/S/C/N/H/X], or '-' if not enforced<br>
+        '*' if SCSI-3/MMC / ATAPI drive and therefore automatically configured</dd>
+   <dt>o</dt>
+    <dd>'+' if marked as &quot;UPC readable&quot;</dd>
+   <dt>p</dt>
+    <dd>raw UPC format [U/P/A], or '-' if not readable<br>
+        SCSI-3/MMC / ATAPI drive always tells 'A' if readable</dd>
+  </dl>
+  <hr>
+
+  <hr>
+
+  <h1>3. <a name="3">Added / Modified IOCtl Functions</a></h1>
+  <hr>
+
+  <h2>3.1. <a name="3.1"><tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_FEATURE_CTRL</tt></a></h2>
+  <dl>
+   <dt><strong>Category:</strong></dt>
+    <dd><tt>IOCTL_CDROMDISK</tt> (80h)</dd>
+   <dt><strong>Function:</strong></dt>
+    <dd><tt>CDROMDISK_FEATURE_CTRL</tt> (4ah)</dd>
+   <dt><strong>Desctiption:</strong></dt>
+    <dd>Set JJSCDROM-extended feature flags</dd>
+   <dt><strong>Parameter Packet Format:</strong></dt>
+    <dd>Pointer to <tt>struct FeatureCtrl_Parm</tt>.
+        <table border="1"><tbody><tr><td>
+<pre>struct FeatureCtrl_Parm {
+   ULONG    ID_code;  // 'CD01'
+   USHORT   flags;    // flags, see below
+};
+&nbsp;
+/* flags for FeatureCtrl_Parm */
+#define FEATURECTRL_DISABLEMS  0x0001
+  // disables multisession handling (restricts only 1st session TOC; CDS200 spoiler)
+#define FEATURECTRL_FIXTRK1NEG 0x0002
+  // fixes track 1 negative start LBA (to zero; CDS200 spoiler)</pre>
+        </td></tr></tbody></table></dd>
+   <dt><strong>Data Packet Format:</strong></dt>
+    <dd>None. This pointer should be <tt>NULL</tt>.</dd>
+   <dt><strong>Returns:</strong></dt>
+    <dd><dl>
+         <dt><tt>NO_ERROR</tt></dt>
+          <dd>Success.</dd>
+         <dt><tt>ERROR_I24_INVALID_PARAMETER</tt></dt>
+          <dd>Invalid parameter (<tt>ID_code</tt> or <tt>flags</tt> value are not valid).</dd>
+         <dt><tt>ERROR_I24_BAD_COMMAND</tt></dt>
+          <dd>This function is not supported.</dd>
+        </dl></dd>
+   <dt><strong>Remarks:</strong></dt>
+    <dd>This new function sets / resets the JJSCDROM-extended feature flags.
+        <dl>
+         <dt><tt>FEATURECTRL_DISABLEMS</tt> (0x0001)</dt>
+          <dd>If the bit set, disables multisession handling of the specified drive. If reset, enables multisession handling. By default, this bit is reset state (no disabling; multisession handling enabled).<br>
+              Useful for CD-DA handling of the last audio/data-mixed CD-Extra track, because disabling multisessioning can completely hide the CD-Extra data part / Midbar CDS-200 bogus 2nd session TOC information.</dd>
+         <dt><tt>FEATURECTRL_FIXTRK1NEG</tt> (0x0002)</dt>
+          <dd>If the bit set, fixes track 1 start LBA value to zero if the value is negative. If reset, no fix applied. By default, this bit is reset state (no fix).<br>
+              Useful for CDDA-Redbook-violate TOC information medium such as Midbar CDS-200 disc.</dd>
+        </dl>
+        If a medium is present when any flags are changed, the medium is automatically remounted. Issueing <tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_RESETDRIVE</tt> also makes all flags default state.</dd>
+  </dl>
+  <hr>
+
+  <h2>3.2. <a name="3.2"><tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_DEVICESTATUS</tt></a></h2>
+  <dl>
+   <dt><strong>Category:</strong></dt>
+    <dd><tt>IOCTL_CDROMDISK</tt> (80h)</dd>
+   <dt><strong>Function:</strong></dt>
+    <dd><tt>CDROMDISK_DEVICESTATUS</tt> (60h)</dd>
+   <dt><strong>Desctiption:</strong></dt>
+    <dd>Get device status</dd>
+   <dt><strong>Parameter Packet Format:</strong></dt>
+    <dd>(not changed)</dd>
+   <dt><strong>Data Packet Format:</strong></dt>
+    <dd>(not changed)</dd>
+   <dt><strong>Returns:</strong></dt>
+    <dd>(not changed)</dd>
+   <dt><strong>Remarks:</strong></dt>
+    <dd>3 new device status bits are added:
+        <dl>
+         <dt>bit 29</dt>
+          <dd>If set, this drive has multisession handling capability.</dd>
+         <dt>bit 28</dt>
+          <dd>If set, multisession handling of this drive is currently disabled.</dd>
+         <dt>bit 27</dt>
+          <dd>If set, track 1 negative start LBA fix of this drive is currently enabled.</dd>
+        </dl></dd>
+  </dl>
+  <hr>
+
+  <h2>3.3. <a name="3.3"><tt>IOCTL_CDROMDISK2</tt> - <tt>CDROMDISK2_FEATURES</tt></a></h2>
+  <dl>
+   <dt><strong>Category:</strong></dt>
+    <dd><tt>IOCTL_CDROMDISK2</tt> (82h)</dd>
+   <dt><strong>Function:</strong></dt>
+    <dd><tt>CDROMDISK2_FEATURES</tt> (63h)</dd>
+   <dt><strong>Desctiption:</strong></dt>
+    <dd>Return DM feature information</dd>
+   <dt><strong>Parameter Packet Format:</strong></dt>
+    <dd>(not changed)</dd>
+   <dt><strong>Data Packet Format:</strong></dt>
+    <dd>(not changed)</dd>
+   <dt><strong>Returns:</strong></dt>
+    <dd>(not changed)</dd>
+   <dt><strong>Remarks:</strong></dt>
+    <dd>2 new feature flag bits are added:
+        <dl>
+         <dt><tt>FEATURE_MSCTRL_SUPPORT</tt> (0x00008000)</dt>
+          <dd>If set, this driver supports IOCtl <tt>IOCTL_CDROMDISK</tt> - <tt>CDROMDISK_FEATURE_CTRL</tt> and therefore JJSCDROM-extended feature <tt>FEATURECTRL_DISABLEMS</tt> flag and device status bits 28-29.</dd>
+         <dt><tt>FEATURE_TRK1NEGFIX_SUPPORT</tt> (0x00004000)</dt>
+          <dd>If set in addition to <tt>FEATURE_MSCTRL_SUPPORT</tt>, this driver also supports JJSCDROM-extended feature <tt>FEATURECTRL_FIXTRK1NEG</tt> flag and device status bits 27.</dd>
+        </dl></dd>
+  </dl>
+  <hr>
+
+  <hr>
+
+  <h1>4. <a name="4">Credits</a></h1>
+  <dl>
+   <dt><strong>Development</strong></dt>
+    <dl>
+     <dt><strong>Modification programming</strong></dt>
+      <dd>Takayuki 'January June' Suwa / Beliefia Productions</dd>
+    </dl>
+    <dl>
+     <dt><strong>Documentation</strong></dt>
+      <dd>Takayuki 'January June' Suwa / Beliefia Productions</dd>
+    </dl>
+   <dt><strong>Special thanks to</strong></dt>
+    <dl>
+     <dt><strong>Atsushi Nishio</strong> (aka. 'The Netscape Communicator 4.61 for OS/2 Team - Extended Development Team' member <a href="about:authors"><tt>:)</tt></a>)</dt>
+      <dd>My predecessor in modifying the CD-DA reading feature. He suggested me with enabling CD-DA reading / multisessioning capabilities and to attach WORM-style SCSI CD-R.</dd>
+     <dt><strong>Robert Lalla</strong></dt>
+      <dd>Author / donator of CD-Extra support modification. I think that many OS/2 users admire your decision.</dd>
+     <dt><strong>Sant Coetzer</strong></dt>
+      <dd>Corrector / proofreader of this document. Sorry for my poor English <tt>:)</tt></dd>
+    </dl>
+  </dl>
+  <hr>
+
+  <hr>
+
+  Modification copyright (c) 1999-2003 Takayuki 'January June' Suwa / Beliefia Productions. All rights reserved.<br>
+  Modification copyright (c) 2000 Robert Lalla. All rights reserved.<br>
+  Beliefia Productions and its logo design are trademarks of Beliefia Productions. All rights reserved.<br>
+  Other copyrighted works (images, musics, programs, and so on), trademarks and servicemarks in this document are owned by their respective owners.<br>
+  <br>
+  [This document is HTML3.2(Wilbur)-compliant.]
+
+ </body>
+
+</html>

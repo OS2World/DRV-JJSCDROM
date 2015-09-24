@@ -1,0 +1,8 @@
+91a92,93
+> #ifdef JJSMODS_BASE                                                                                                            // JJ20030312
+> #else                                                                                                                          // JJ20030312
+92a95,98
+> #endif                                                                                                                         // JJ20030312
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> extern UCHAR  CDB_FullTOCdesc[1126]; // 99 tracks + A1/A2/A3 + desc header                                                     // JJ20030312
+> #endif                                                                                                                         // JJ20030312

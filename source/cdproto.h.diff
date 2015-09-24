@@ -1,0 +1,8 @@
+133a134,136
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> VOID   BuildCDB_ReadFullTOC (NPUNITCB, UCHAR, USHORT, NPIORB_CDB FAR *);                                                       // JJ20030312
+> #endif                                                                                                                         // JJ20030312
+204a208,210
+> #ifdef JJSMODS_SCSI3MMC                                                                                                        // JJ20030312
+> VOID Adjust_ModeSense10Result(NPIORB_CDB);                                                                                     // JJ20030312
+> #endif                                                                                                                         // JJ20030312
